@@ -1,7 +1,6 @@
 name: scanprivacy
 description: >
-  Passive privacy conformance scan (GDPR / ePrivacy / AI Act) with SARIF output
-  for code scanning, findings anchored to the source line that causes them.
+  Passive privacy conformance scan (GDPR / ePrivacy / AI Act) with SARIF output for code scanning, findings anchored to the source line that causes them.
 author: Fabrizio Salmi
 branding:
   icon: shield
@@ -17,15 +16,12 @@ inputs:
     default: en
   fail-on:
     description: >
-      When to fail the job: critical | high | medium | low | info |
-      any-finding | not-conformant | never. Start at `critical` to adopt the
-      gate without blocking a backlog you have not triaged yet.
+      When to fail the job: critical | high | medium | low | info | any-finding | not-conformant | never. Start at `critical` to adopt the gate without blocking.
     required: false
     default: not-conformant
   source-root:
     description: >
-      Repository root used to anchor findings to the file and line that cause
-      them. Set to an empty string to disable anchoring.
+      Repository root used to anchor findings to the file and line that cause them. Set to an empty string to disable anchoring.
     required: false
     default: .
   anchor-file:
@@ -58,9 +54,7 @@ inputs:
     default: ""
   sign:
     description: >
-      unsigned | cosign-keyless | cosign-key. Keyless needs the id-token: write
-      permission and anchors the signature in the public transparency log, which
-      is what lets a stranger verify it without holding a key.
+      unsigned | cosign-keyless | cosign-key. Keyless needs the id-token: write permission and anchors the signature in the public transparency log
     required: false
     default: cosign-keyless
   cosign-key:
