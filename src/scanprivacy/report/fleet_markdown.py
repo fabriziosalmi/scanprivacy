@@ -7,11 +7,12 @@ to know which single decision, taken once, is repeated across the estate.
 from __future__ import annotations
 
 from ..analyze.fleet import FleetSummary
+from ..i18n.escaping import md_code, md_escape
 from ..i18n.translator import DEFAULT_LOCALE, Translator
 
 
 def render_fleet(summary: FleetSummary, locale: str = DEFAULT_LOCALE, limit: int = 12) -> str:
-    t = Translator.for_locale(locale)
+    t = Translator.for_locale(locale, param_escape=md_escape)
     lines: list[str] = []
     add = lines.append
 
@@ -53,8 +54,8 @@ def render_fleet(summary: FleetSummary, locale: str = DEFAULT_LOCALE, limit: int
                 else t.rule(entry.rule_id, "title")
             )
             add(
-                f"| `{entry.rule_id}` {title} | {t.label(entry.severity, 'Severity')} "
-                f"| {entry.sites} | {', '.join(entry.examples[:3])} |"
+                f"| {md_code(entry.rule_id)} {title} | {t.label(entry.severity, 'Severity')} "
+                f"| {entry.sites} | {', '.join(md_escape(e) for e in entry.examples[:3])} |"
             )
         add("")
 
@@ -70,7 +71,7 @@ def render_fleet(summary: FleetSummary, locale: str = DEFAULT_LOCALE, limit: int
         add("|---|---:|---:|---|")
         for entry in summary.by_vendor[:limit]:
             add(
-                f"| {entry.product} | {entry.sites} | {entry.undeclared_on} "
+                f"| {md_escape(entry.product)} | {entry.sites} | {entry.undeclared_on} "
                 f"| {t.label(entry.transfer, 'TransferScope')} |"
             )
         add("")
@@ -88,7 +89,7 @@ def render_fleet(summary: FleetSummary, locale: str = DEFAULT_LOCALE, limit: int
     ):
         grade = target.grade if target.status == "ok" else f"{target.grade} ({target.status})"
         add(
-            f"| {target.domain} | {grade} | {target.findings} "
+            f"| {md_escape(target.domain)} | {md_escape(grade)} | {target.findings} "
             f"| {target.third_parties} | {target.pages} |"
         )
     add("")
@@ -96,6 +97,6 @@ def render_fleet(summary: FleetSummary, locale: str = DEFAULT_LOCALE, limit: int
     if summary.clean_sites:
         add(f"## {t.t('fleet.headings.clean')}")
         add("")
-        add(", ".join(sorted(summary.clean_sites)))
+        add(", ".join(md_escape(site) for site in sorted(summary.clean_sites)))
         add("")
     return "\n".join(lines)

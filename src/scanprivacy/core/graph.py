@@ -9,6 +9,8 @@ has in hand.
 
 from __future__ import annotations
 
+import re
+
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
@@ -96,6 +98,13 @@ MERMAID_MAX_NODES = 60
 MERMAID_LABEL_CHARS = 60
 
 
+def _mermaid_label(text: str) -> str:
+    """A node label that cannot leave its quotes or the code fence around the diagram: the text of
+    some nodes (a cookie or storage key) is chosen by the scanned site."""
+    text = re.sub(r"[\x00-\x1f\x7f\u2028\u2029]+", " ", str(text))
+    return text.replace('"', "'").replace("`", "'")[:MERMAID_LABEL_CHARS]
+
+
 def to_mermaid(graph: Graph, labels: dict[str, str] | None = None, max_nodes: int = MERMAID_MAX_NODES) -> str:
     """A readable projection for humans; the JSON stays the source of truth.
 
@@ -122,7 +131,7 @@ def to_mermaid(graph: Graph, labels: dict[str, str] | None = None, max_nodes: in
     for i, node in enumerate(kept):
         ids[node.id] = f"n{i}"
         open_, close = shapes.get(node.type, ("[", "]"))
-        label = labels.get(node.id, node.label).replace('"', "'")[:MERMAID_LABEL_CHARS]
+        label = _mermaid_label(labels.get(node.id, node.label))
         lines.append(f'  {ids[node.id]}{open_}"{label}"{close}')
     for edge in graph.edges:
         if edge.src in keep_ids and edge.dst in keep_ids:

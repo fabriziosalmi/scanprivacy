@@ -21,7 +21,7 @@
     {% else %}
     {{ t.t('report.subtitle_observed', timestamp=scan.started_at[:19]|replace("T", " ")) }}<br>
     {% endif %}
-    {{ t.t('report.subtitle_url') }}: <a class="mono" href="{{ scan.final_url }}">{{ scan.final_url }}</a><br>
+    {{ t.t('report.subtitle_url') }}: {% if scan.final_url.startswith(('http://', 'https://')) %}<a class="mono" href="{{ scan.final_url }}">{{ scan.final_url }}</a>{% else %}<span class="mono">{{ scan.final_url }}</span>{% endif %}<br>
     {{ t.t('report.subtitle_scan') }}: <span class="mono">{{ scan.scan_id }}</span>
   </p>
 
@@ -77,7 +77,7 @@
   <table>
     <thead><tr>{% for h in scan.stability.head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
     <tbody>
-      {% for name, severity, seen in scan.stability.rows %}<tr><td>{{ name }}</td><td>{{ severity }}</td><td>{{ seen }}</td></tr>{% endfor %}
+      {% for finding_id, title, severity, seen in scan.stability.rows %}<tr><td>{{ finding_id }}{% if title %}: {{ title }}{% endif %}</td><td>{{ severity }}</td><td>{{ seen }}</td></tr>{% endfor %}
     </tbody>
   </table>
   {% endif %}
@@ -86,7 +86,7 @@
   {% if scan.quick_wins %}
   <div class="nota">
     {{ t.t('report.legend.quick_wins', n=scan.quick_wins|length,
-           ids=scan.quick_wins[:6]|map(attribute='id')|join(', '))|safe }}
+           ids=(scan.quick_wins[:6]|map(attribute='id')|join(', '))|e)|safe }}
   </div>
   {% endif %}
 
@@ -465,7 +465,7 @@
 <table>
   <tbody>
     <tr><th style="width:26%">{{ t.t('report.labels.type') }}</th><td>{{ d.kind_display }}</td></tr>
-    <tr><th>{{ t.t('report.labels.url') }}</th><td><a class="mono" href="{{ d.url }}">{{ d.url }}</a></td></tr>
+    <tr><th>{{ t.t('report.labels.url') }}</th><td>{% if d.url.startswith(('http://', 'https://')) %}<a class="mono" href="{{ d.url }}">{{ d.url }}</a>{% else %}<span class="mono">{{ d.url }}</span>{% endif %}</td></tr>
     <tr><th>{{ t.t('report.labels.discovery') }}</th><td>{{ d.discovery }}</td></tr>
     <tr><th>{{ t.t('report.labels.extracted_text') }}</th><td>{{ t.t('report.labels.characters', n=d.text_len) }} · SHA-256 <span class="impronta">{{ d.text_sha256 }}</span></td></tr>
     <tr><th>{{ t.t('report.labels.elements_present') }}</th><td>{{ d.elements_present|join(", ") or t.t('report.labels.none') }}</td></tr>

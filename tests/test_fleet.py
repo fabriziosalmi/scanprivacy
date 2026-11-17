@@ -233,7 +233,7 @@ def test_the_fleet_pdf_is_produced_and_is_a_pdf(tmp_path):
     not cover it: the PDF path goes through a separate template and WeasyPrint,
     and has broken on its own before — a silent str.replace no-op once left an
     entire section out of the document and nobody noticed until it was read."""
-    from scanprivacy.report.fleet_pdf import render_fleet_pdf
+    from scanprivacy.report.fleet_pdf import render_fleet_html, render_fleet_pdf
 
     results = [
         _result("https://a.example", grade="D", findings=[("PM-SEC-01", "medium")],
@@ -248,4 +248,6 @@ def test_the_fleet_pdf_is_produced_and_is_a_pdf(tmp_path):
         blob = out.read_bytes()
         assert blob.startswith(b"%PDF-"), "not a PDF"
         assert len(blob) > 2000, "a PDF this small rendered nothing"
-        assert b"\xe2\x9f\xa6" not in blob, "unresolved catalogue key reached the PDF"
+        # The placeholder is looked for in the HTML the PDF is made from, not in the PDF: a compressed
+        # stream is arbitrary bytes, and these three turn up in one by chance now and then.
+        assert "\u27e6" not in render_fleet_html(summary, locale), "unresolved catalogue key reached the PDF"

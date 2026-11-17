@@ -28,10 +28,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The floor declared in pyproject, and the version actually developed
-        # against. A suite that only ever runs on one of them is not testing
-        # `requires-python`, it is asserting it.
-        python-version: ["3.11", "3.12"]
+        # The floor declared in pyproject, the version the images and the action use, and the
+        # newest one a user is likely to have: development runs on 3.13, so leaving it out of
+        # CI meant the version the author used was the one the suite never tested.
+        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
