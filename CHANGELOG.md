@@ -4,6 +4,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.1.4]
+
 - Security: reports no longer let the scanned site write into them. Names a site chooses (cookie and storage key names, hosts, URLs, titles of documents, the domain of an unknown vendor) reach the Markdown report, the SARIF help text and the PDF through finding identifiers, parameters and evidence. A key such as ``_ga`  [text](https://example/)  ` `` closed a code span and put a clickable link in the Markdown report, and the PDF's "quick wins" sentence passed identifiers through as HTML. Such values are now escaped where they meet the report text (Markdown, SARIF help, fleet summary, diagram labels) and in the PDF, and links in the PDF are written only for `http` and `https` addresses. The JSON still holds what was observed, byte for byte. Checked with 42 payload and field combinations against the renderer GitHub uses: 38 of 84 renders let a payload act as structure before, none after. No file disclosure was possible: the PDF already refused any resource outside its templates.
 - CI runs the suite on Python 3.13 as well, and the package declares it. A fleet PDF test looked for a placeholder in the compressed PDF bytes, where the same three bytes occur by chance in about 0.25% of runs; it now checks the HTML.
 
