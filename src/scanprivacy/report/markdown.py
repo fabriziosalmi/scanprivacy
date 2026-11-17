@@ -4,14 +4,19 @@ human projection, in whatever language it was asked for."""
 from __future__ import annotations
 
 from ..core.models import ScanResult
+from ..i18n.escaping import md_code, md_escape
 from ..i18n.translator import DEFAULT_LOCALE, Translator
-from .render import scan_posture_rows, render_scan
+from .render import scan_posture_rows, render_finding, render_scan
 
 _ICON = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🔵", "info": "⚪️"}
 
 
 def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool = True) -> str:
-    t = Translator.for_locale(locale)
+    # What the scanned site chose (names, hosts, URLs, titles) is escaped where it meets the
+    # catalogue text, by the translator. `plain` is for the two places where backslashes would
+    # show: a command inside a code fence, and a diagram label.
+    t = Translator.for_locale(locale, param_escape=md_escape)
+    plain = Translator.for_locale(locale)
     scan = render_scan(result, t)
     lines: list[str] = []
     add = lines.append
@@ -19,8 +24,8 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
     title_key = "consent_pass.title" if scan.mode == "refusal_pass" else "report.title"
     add(f"# {t.t(title_key, domain=scan.domain)}")
     add("")
-    add(f"**{t.t('report.subtitle_url')}**: {scan.final_url}  ")
-    add(f"**{t.t('report.subtitle_scan')}**: `{scan.scan_id}`  ")
+    add(f"**{t.t('report.subtitle_url')}**: {md_escape(scan.final_url)}  ")
+    add(f"**{t.t('report.subtitle_scan')}**: {md_code(scan.scan_id)}  ")
     if scan.mode == "refusal_pass":
         add(f"{t.t('consent_pass.posture.method_refusal')}  ")
     else:
@@ -72,7 +77,8 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
         if scan.stability["rows"]:
             add("| " + " | ".join(scan.stability["head"]) + " |")
             add("|---|---|---:|")
-            for name, severity, seen in scan.stability["rows"]:
+            for finding_id, title, severity, seen in scan.stability["rows"]:
+                name = f"{md_code(finding_id)}: {title}" if title else md_code(finding_id)
                 add(f"| {name} | {severity} | {seen} |")
             add("")
 
@@ -101,7 +107,7 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
         add(f"### {_ICON.get(finding.severity_value, '•')} {finding.title}")
         add("")
         meta = [
-            f"`{finding.id}`",
+            md_code(finding.id),
             f"**{finding.severity}**",
             finding.priority,
             f"{t.t('report.labels.owner')}: **{finding.owner}**",
@@ -127,9 +133,9 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
                 if isinstance(value, list):
                     add(f"- **{label}**:")
                     for item in value[:8]:
-                        add(f"  - `{item}`")
+                        add(f"  - {md_code(item)}")
                 else:
-                    add(f"- **{label}**: `{value}`")
+                    add(f"- **{label}**: {md_code(value)}")
             add("")
             add("</details>")
             add("")
@@ -164,7 +170,7 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
         for row in scan.inventory:
             declared = t.t("report.labels.yes") if row["declared"] else f"**{t.t('report.labels.no')}**"
             add(
-                f"| {row['product']} | {row['vendor_display']} | {row['jurisdiction']} "
+                f"| {md_escape(row['product'])} | {md_escape(row['vendor_display'])} | {md_escape(row['jurisdiction'])} "
                 f"| {row['transfer_display']} | {row['consent_display']} | {declared} |"
             )
         add("")
@@ -187,7 +193,7 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
         for index, planned in enumerate(plan, start=1):
             page = observed.get(planned["url"]) or {}
             add(
-                f"| {index} | {planned['url']} | {t.t('page_kind.' + planned.get('kind', 'other'))} "
+                f"| {index} | {md_code(planned['url'])} | {t.t('page_kind.' + planned.get('kind', 'other'))} "
                 f"| {page.get('status') or '—'} | {len(page.get('requests') or [])} |"
             )
         add("")
@@ -208,7 +214,9 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
         add(f"| {t.t('report.labels.evidence_digest')} | `{(record.get('evidence_digest') or {}).get('sha256')}` |")
         add("")
         add("```bash")
-        for step in t.items(record.get("rerun_key", "record.rerun"), **(record.get("rerun_params") or {})):
+        # inside a fence, so no Markdown escaping, but a line break must not end the fence
+        params = {k: " ".join(str(v).split()) for k, v in (record.get("rerun_params") or {}).items()}
+        for step in plain.items(record.get("rerun_key", "record.rerun"), **params):
             add(step)
         add("```")
         add("")
@@ -219,7 +227,8 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
         add(f"## {t.t('report.headings.evidence')}")
         add("")
         add("```mermaid")
-        add(to_mermaid(result.graph, labels={f"finding:{f.id}": f.title for f in scan.findings}))
+        titles = {f.id: render_finding(f, plain).title for f in result.findings}
+        add(to_mermaid(result.graph, labels={f"finding:{fid}": title for fid, title in titles.items()}))
         add("```")
         add("")
 

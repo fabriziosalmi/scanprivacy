@@ -16,6 +16,7 @@ from enum import StrEnum
 from typing import Any
 
 from ..core.models import Finding, RemediationRef, ScanResult, VerificationStep
+from ..i18n.escaping import Trusted
 from ..i18n.translator import Translator
 
 
@@ -23,9 +24,9 @@ def _resolve(value: Any, t: Translator) -> Any:
     """Canonical values and catalogue keys become display strings; the rest is
     passed through untouched."""
     if isinstance(value, StrEnum):
-        return t.label(value)
+        return Trusted(t.label(value))
     if isinstance(value, dict) and set(value) == {"__key__"}:
-        return t.t(value["__key__"])
+        return Trusted(t.t(value["__key__"]))
     if isinstance(value, dict):
         return {k: _resolve(v, t) for k, v in value.items()}
     if isinstance(value, (list, tuple)):
@@ -75,7 +76,7 @@ def render_verification(steps: tuple[VerificationStep, ...], t: Translator) -> l
     """A step may point at a single string or at a list of strings; both flatten
     into one ordered set of instructions."""
     out: list[str] = []
-    clean_window = t.t("verification.clean_window")
+    clean_window = Trusted(t.t("verification.clean_window"))
     for step in steps:
         params = {"clean_window": clean_window, **step.params}
         out.extend(rendered for rendered in t.items(step.key, **params) if rendered)
@@ -155,7 +156,7 @@ def posture_rows(
         else:
             rows.append((label, t.t(key, n=max_pages, rps=per_host_rps)))
     if user_agent:
-        rows.append((t.t("report.posture_label.user_agent"), user_agent))
+        rows.append((t.t("report.posture_label.user_agent"), (t.param_escape or (lambda v: v))(user_agent)))
     return rows
 
 
@@ -168,17 +169,18 @@ def vantage_line(record: dict[str, Any] | None, t: Translator) -> str:
     about the site and disagreeing about the observer."""
     vantage = (record or {}).get("vantage") or {}
     source = vantage.get("source")
+    esc = t.param_escape or (lambda v: v)
     if source == "declared":
-        return f"{vantage.get('declared')} — {t.t('record.vantage.declared')}"
+        return f"{esc(vantage.get('declared'))} — {t.t('record.vantage.declared')}"
     if source == "looked_up":
         place = " / ".join(
-            str(vantage[k]) for k in ("country", "region", "city", "org") if vantage.get(k)
+            str(esc(str(vantage[k]))) for k in ("country", "region", "city", "org") if vantage.get(k)
         )
         via = t.t("record.vantage.looked_up", endpoint=vantage.get("endpoint", ""))
         return f"{place} — {via}" if place else via
     reason = t.t(vantage.get("reason_key") or "record.vantage.not_configured")
     detail = vantage.get("detail")
-    return f"{reason} ({detail})" if detail else reason
+    return f"{reason} ({esc(detail)})" if detail else reason
 
 
 def scan_posture_rows(record: dict[str, Any] | None, t: Translator) -> list[tuple[str, str]]:
@@ -435,7 +437,8 @@ def _stability(result: ScanResult, t: Translator, titles: dict[str, str]) -> dic
         "head": (t.t("report.labels.finding"), t.t("report.labels.severity"), t.t("report.stability.seen")),
         "rows": [
             (
-                f"{f['id']}: {titles[f['id']]}" if f["id"] in titles else f["id"],
+                f["id"],
+                titles.get(f["id"], ""),
                 t.label(f["severity"], "Severity"),
                 t.t("report.stability.seen_value", seen=f["seen"], of=f["of"]),
             )

@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 import yaml
 
@@ -46,10 +46,12 @@ def _clean(value: str) -> str:
     return value.rstrip("\n").replace("\n", " ")
 
 
-def _format(template: str, params: dict[str, Any]) -> str:
+def _format(template: str, params: dict[str, Any], escape: Callable[[Any], Any] | None = None) -> str:
     template = _clean(template)
     if not params or "{" not in template:
         return template
+    if escape is not None:
+        params = {name: escape(value) for name, value in params.items()}
     try:
         return string.Formatter().vformat(template, (), _SafeDict(params))
     except (ValueError, IndexError):
@@ -91,9 +93,15 @@ class Translator:
     locale: str = DEFAULT_LOCALE
     strict: bool = False
     _chain: tuple[dict[str, Any], ...] = field(default_factory=tuple, repr=False)
+    param_escape: Callable[[Any], Any] | None = None
+    """Applied to every parameter substituted into a catalogue text, never to the text itself. A
+    Markdown report passes `md_escape`: what came from the scanned site stays text. Parameters that
+    are catalogue text are marked `Trusted` and pass through."""
 
     @classmethod
-    def for_locale(cls, locale: str | None = None, strict: bool = False) -> "Translator":
+    def for_locale(
+        cls, locale: str | None = None, strict: bool = False, param_escape: Callable[[Any], Any] | None = None
+    ) -> "Translator":
         locale = (locale or DEFAULT_LOCALE).replace("_", "-").lower()
         # "it-IT" and "it" resolve to the same catalogue; unknown locales fall
         # back to English rather than failing a scan over a display detail.
@@ -109,7 +117,7 @@ class Translator:
                 continue
         if not chain:
             raise FileNotFoundError("no locale catalogue found, not even English")
-        return cls(locale=resolved, strict=strict, _chain=tuple(chain))
+        return cls(locale=resolved, strict=strict, _chain=tuple(chain), param_escape=param_escape)
 
     # ------------------------------------------------------------- lookup
     def _lookup(self, catalogue: str, key: str) -> Any:
@@ -136,11 +144,11 @@ class Translator:
         value = self._lookup("ui", key)
         if value is None:
             return self._missing("ui", key)
-        return _format(str(value), params)
+        return _format(str(value), params, self.param_escape)
 
     def maybe(self, key: str, /, **params: Any) -> str | None:
         value = self._lookup("ui", key)
-        return _format(str(value), params) if value is not None else None
+        return _format(str(value), params, self.param_escape) if value is not None else None
 
     def items(self, key: str, /, **params: Any) -> list[str]:
         """A list-valued string (remediation steps, verification steps)."""
@@ -148,8 +156,8 @@ class Translator:
         if value is None:
             return [self._missing("ui", key)]
         if isinstance(value, str):
-            return [_format(value, params)]
-        return [_format(str(v), params) for v in value]
+            return [_format(value, params, self.param_escape)]
+        return [_format(str(v), params, self.param_escape) for v in value]
 
     def plural(self, key: str, n: int, /, **params: Any) -> str:
         """Pick `key.one` or `key.other` according to `n`.
@@ -165,7 +173,7 @@ class Translator:
             value = self._lookup("ui", f"{key}.other")
         if value is None:
             return self._missing("ui", f"{key}.{form}")
-        return _format(str(value), {"n": n, **params})
+        return _format(str(value), {"n": n, **params}, self.param_escape)
 
     def label(self, member: StrEnum | str, enum_name: str | None = None) -> str:
         """Display string for a canonical value: `high` -> "High" / "Alta"."""
@@ -184,15 +192,15 @@ class Translator:
         value = self._lookup("rules", f"{rule_id}.{field_}")
         if value is None:
             return self._missing("rules", f"{rule_id}.{field_}")
-        return _format(str(value), params)
+        return _format(str(value), params, self.param_escape)
 
     def rule_list(self, rule_id: str, field_: str, /, **params: Any) -> list[str]:
         value = self._lookup("rules", f"{rule_id}.{field_}")
         if value is None:
             return []
         if isinstance(value, str):
-            return [_format(value, params)]
-        return [_format(str(v), params) for v in value]
+            return [_format(value, params, self.param_escape)]
+        return [_format(str(v), params, self.param_escape) for v in value]
 
     def rule_has(self, rule_id: str, field_: str) -> bool:
         return self._lookup("rules", f"{rule_id}.{field_}") is not None

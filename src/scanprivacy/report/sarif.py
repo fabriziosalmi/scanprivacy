@@ -29,6 +29,7 @@ from ..core.enums import Severity
 from ..core.models import ScanResult
 from ..i18n.translator import DEFAULT_LOCALE, Translator
 from .anchor import SourceAnchor, SourceIndex
+from ..i18n.escaping import md_escape
 from .render import RenderedFinding, render_finding
 
 SARIF_VERSION = "2.1.0"
@@ -146,6 +147,9 @@ def build_sarif(
     anchor_file: str = "README.md",
 ) -> dict[str, Any]:
     t = Translator.for_locale(locale)
+    # `help.markdown` is rendered as Markdown by code scanning, so what the scanned site chose
+    # (key names, hosts) has to stay text there. `text` fields are plain text and use `t`.
+    t_md = Translator.for_locale(locale, param_escape=md_escape)
     index = SourceIndex(source_root) if source_root else None
 
     rules: list[dict[str, Any]] = []
@@ -165,7 +169,7 @@ def build_sarif(
                     "fullDescription": {"text": t.rule(finding.rule_id, "description")},
                     "help": {
                         "text": rendered.description,
-                        "markdown": _rule_help_markdown(rendered, t),
+                        "markdown": _rule_help_markdown(render_finding(finding, t_md), t_md),
                     },
                     "defaultConfiguration": {"level": _LEVEL[finding.severity]},
                     "properties": {
