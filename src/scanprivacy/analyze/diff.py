@@ -1,6 +1,6 @@
 """Comparing two scans of the same target.
 
-A single scan says what is wrong. Two scans say whether anyone did anything —
+A single scan says what is wrong. Two scans say whether anyone did anything:
 and that is the question every steering committee actually asks. Findings that
 survive carry their age; findings that disappear are evidence that a fix landed;
 findings that come back are the interesting ones, because they mean the fix was
@@ -49,7 +49,7 @@ def _comparability(before: dict[str, Any], after: dict[str, Any]) -> dict[str, A
 
     Without this the comparison silently answers a different question than the
     one asked. Change a rule and every finding it used to produce shows up under
-    "resolved" — which reads as somebody fixed something, and nobody did. That
+    "resolved": which reads as somebody fixed something, and nobody did. That
     is this project's own cardinal error aimed at its most quotable output: a
     steering committee is shown a number that describes a code change and calls
     it remediation.
@@ -86,8 +86,8 @@ def _vantage_comparability(before: dict[str, Any], after: dict[str, Any]) -> dic
     market: the site did not change, the observer did. Read as remediation, that
     is a fix nobody made; read as a regression, a fault nobody introduced.
 
-    Compared on what identifies a place — the declared string, or the country
-    and network from a lookup — and not on the whole fragment, because an IP
+    Compared on what identifies a place: the declared string, or the country
+    and network from a lookup: and not on the whole fragment, because an IP
     address or a timestamp differing between two scans from the same city is not
     a difference worth warning about.
     """

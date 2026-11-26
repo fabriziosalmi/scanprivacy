@@ -6,7 +6,7 @@ opportunity: if the page loads `fonts.googleapis.com`, some file in the
 repository says so, and pointing the developer at that line is the difference
 between an alert they act on and an alert they mute.
 
-The search is deliberately literal — the evidence token as it appears in the
+The search is deliberately literal: the evidence token as it appears in the
 observation, matched verbatim in text files. No parsing, no heuristics about
 frameworks: either the token is written in the source, or we say we could not
 find it and fall back to the declared anchor. A confident wrong line is worse
@@ -99,7 +99,7 @@ def _rank(path: Path, root: Path) -> int:
 
 # A line that *includes* a third party looks different from a line that merely
 # names it: an allowlist, a CSP header, a comment, a knowledge base. Both are
-# useful to a developer, but only the first is the cause — and saying which is
+# useful to a developer, but only the first is the cause: and saying which is
 # which is the difference between a precise tool and a plausible one.
 INCLUSION = re.compile(
     r"<\s*(script|link|iframe|img|source|embed|object)\b|"
@@ -113,7 +113,7 @@ INCLUSION = re.compile(
 
 @dataclass(frozen=True, slots=True)
 class SourceAnchor:
-    path: str  # repository-relative, POSIX separators — SARIF wants that
+    path: str  # repository-relative, POSIX separators: SARIF wants that
     line: int
     snippet: str
     token: str

@@ -1,7 +1,7 @@
 """Turning facts into sentences, in one language, in one place.
 
-Everything upstream of this module is language-neutral. Everything downstream —
-Markdown, PDF, the API's human-readable views — consumes what this module
+Everything upstream of this module is language-neutral. Everything downstream:
+Markdown, PDF, the API's human-readable views: consumes what this module
 produces. That is what makes "the same scan in five languages" a rendering
 option rather than a re-observation, and it is the only reason the digests in
 the reproducibility record stay meaningful across translations.
@@ -105,7 +105,7 @@ def render_remediation(remediation: RemediationRef | None, t: Translator) -> Ren
             steps.append(f"{remediation.params.get('platform_name')}: {hint}")
 
     # Prepended, not appended. Where the hosting makes the ordinary fix
-    # impossible, that is the first thing the reader needs — after three steps
+    # impossible, that is the first thing the reader needs: after three steps
     # about a setting their platform does not have, they have already gone
     # looking for it.
     constraint_key = remediation.params.get("platform_constraint_key")
@@ -134,8 +134,8 @@ def posture_rows(
 
     One implementation for the scan report, the PDF and the fleet summary,
     because it had been written three times and was wrong three times in the
-    same ways. The label was derived from the key — `report.posture.
-    extra_requests` printed as "extra requests" — so an Italian report described
+    same ways. The label was derived from the key (`report.posture.
+    extra_requests` printed as "extra requests") so an Italian report described
     its own method in English. The sentence was resolved with no parameters, so
     the page budget read "at most {n} pages". And a one-page scan said "1
     pages", which is what `Translator.plural` exists to prevent.
@@ -171,13 +171,13 @@ def vantage_line(record: dict[str, Any] | None, t: Translator) -> str:
     source = vantage.get("source")
     esc = t.param_escape or (lambda v: v)
     if source == "declared":
-        return f"{esc(vantage.get('declared'))} — {t.t('record.vantage.declared')}"
+        return f"{esc(vantage.get('declared'))} ({t.t('record.vantage.declared')})"
     if source == "looked_up":
         place = " / ".join(
             str(esc(str(vantage[k]))) for k in ("country", "region", "city", "org") if vantage.get(k)
         )
         via = t.t("record.vantage.looked_up", endpoint=vantage.get("endpoint", ""))
-        return f"{place} — {via}" if place else via
+        return f"{place} ({via})" if place else via
     reason = t.t(vantage.get("reason_key") or "record.vantage.not_configured")
     detail = vantage.get("detail")
     return f"{reason} ({esc(detail)})" if detail else reason
@@ -307,7 +307,7 @@ def _summary(result: ScanResult, t: Translator) -> list[str]:
 
     Built from counts, never from a judgement: the numbers are the argument and
     each is checkable further down the document. Plural forms come from the
-    catalogue — "1 keys" in the opening paragraph costs the document its
+    catalogue: "1 keys" in the opening paragraph costs the document its
     credibility before the reader reaches the findings.
     """
     site = result.site or {}

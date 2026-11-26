@@ -1,7 +1,7 @@
 """A conformance badge, as a self-contained SVG.
 
 Deliberately not a shields.io URL. A badge served from a third party makes every
-visitor of the README disclose their IP address to that third party — which is
+visitor of the README disclose their IP address to that third party: which is
 precisely the finding `PM-TRF-01` raises against everyone else. A tool that
 breaks its own rule in its own README has no standing to raise it.
 

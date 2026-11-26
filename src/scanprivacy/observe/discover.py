@@ -1,15 +1,15 @@
 """Finding the *actual* legal documents.
 
 privacy-pa matched any link whose text or href contained "privacy". On a
-municipality site that works. On federprivacy.org — an association whose every
-article is about privacy — it picks up a webinar page and the whole conformance
+municipality site that works. On federprivacy.org: an association whose every
+article is about privacy: it picks up a webinar page and the whole conformance
 reading collapses: the engine would read the wrong document, then declare
 vendors "undisclosed" against a text that was never the notice.
 
 So documents are *scored*, not matched: the URL path carries far more signal
 than the link text, article-shaped paths are penalised, and what is fetched is
 verified to actually read like the document it claims to be. When no link
-qualifies, a small number of conventional paths are tried — plain GETs of
+qualifies, a small number of conventional paths are tried: plain GETs of
 public URLs, robots.txt honoured, nothing an ordinary visitor could not do.
 """
 
@@ -107,7 +107,7 @@ class Candidate:
 
 
 def _norm(text: str) -> str:
-    return re.sub(r"\s+", " ", text or "").strip().strip("»«•|-–—").strip().lower()
+    return re.sub(r"\s+", " ", text or "").strip().strip("\u00bb\u00ab\u2022|-\u2013\u2014").strip().lower()
 
 
 def score_link(kind: str, text: str, href: str) -> tuple[int, str]:
@@ -141,9 +141,9 @@ def score_link(kind: str, text: str, href: str) -> tuple[int, str]:
         score -= 3
         why.append("discovery.long_text")
 
-    # Catalogue keys, joined. This string reaches the report — it is how a
+    # Catalogue keys, joined. This string reaches the report: it is how a
     # reader checks that the engine picked the document they would have picked
-    # — so it renders in their language like everything else.
+    #: so it renders in their language like everything else.
     return score, ",".join(why)
 
 

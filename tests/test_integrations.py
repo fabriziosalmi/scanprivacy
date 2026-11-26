@@ -359,6 +359,46 @@ def test_a_missing_artefact_is_detected(tmp_path: Path):
     assert checked.ok is False
 
 
+def test_attestation_rejects_subject_path_traversal(tmp_path: Path):
+    from scanprivacy.report.attestation import file_digest, verify_attestation, write_attestation
+
+    outside = tmp_path / "secret.txt"
+    outside.write_text("do-not-read", encoding="utf-8")
+    work = tmp_path / "run"
+    work.mkdir()
+    statement_path = work / "attestation.json"
+    statement, _ = write_attestation(_result(), _artifacts(work), statement_path)
+    statement["subject"].append({"name": "../secret.txt", "digest": {"sha256": file_digest(outside)}})
+    statement_path.write_text(json.dumps(statement), encoding="utf-8")
+
+    checked = verify_attestation(statement_path)
+    assert "../secret.txt" in checked.mismatched
+    assert checked.ok is False
+
+
+def test_keyless_verification_refuses_missing_identity_or_issuer(tmp_path: Path, monkeypatch):
+    import scanprivacy.report.attestation as attestation
+
+    statement_path = tmp_path / "attestation.json"
+    attestation.write_attestation(_result(), _artifacts(tmp_path), statement_path)
+    (tmp_path / "attestation.json.sigbundle").write_text("{}", encoding="utf-8")
+
+    monkeypatch.setattr(attestation, "cosign_available", lambda: True)
+    called = []
+    monkeypatch.setattr(attestation, "_run", lambda cmd, **kw: called.append(cmd))
+
+    for kwargs in (
+        {},
+        {"certificate_identity": "https://github.com/acme/repo/.github/workflows/ci.yml@refs/heads/main"},
+        {"certificate_oidc_issuer": "https://token.actions.githubusercontent.com"},
+    ):
+        checked = attestation.verify_attestation(statement_path, **kwargs)
+        assert checked.signature_verified is None
+        assert checked.ok is False
+        assert "wildcard" in checked.signature_detail
+    assert called == [], "cosign must not be invoked with wildcard identity or issuer"
+
+
 def test_an_unsigned_statement_never_passes(tmp_path: Path):
     """Fail-closed: a statement nobody signed proves only that someone wrote a
     file. Treating it as a pass would be worse than not attesting at all."""

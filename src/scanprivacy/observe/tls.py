@@ -2,7 +2,7 @@
 
 A TLS handshake on port 443 is exactly what opening the page already does, so
 this stays inside the passive perimeter. Two facts are extracted: who issued
-the certificate (free vs commercial CA — a cost finding, carried over from
+the certificate (free vs commercial CA: a cost finding, carried over from
 privacy-pa's R-COST-01) and how long it has left.
 """
 

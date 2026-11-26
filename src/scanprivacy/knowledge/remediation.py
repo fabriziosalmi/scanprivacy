@@ -4,7 +4,7 @@ Every fix this engine knows already existed: 9 vendor patterns, 27 rule-specific
 procedures, 83 concrete steps, 30 alternatives, 26 contextual extra steps, 16
 independent verification procedures. None of it could be *asked for*. The only
 way to see a fix was to scan a site that happened to trigger the rule that
-carried it — so answering "how do I stop sending IP addresses to Google Fonts?"
+carried it: so answering "how do I stop sending IP addresses to Google Fonts?"
 meant finding a site that used Google Fonts and scanning it.
 
 That makes the knowledge base a lookup table with no lookup. This module is the
@@ -45,7 +45,7 @@ class RemediationEntry:
     """Things that remove the problem instead of documenting it. The cheapest
     transfer impact assessment is the transfer you do not make."""
     verification: list[str] = field(default_factory=list)
-    """How to confirm the fix worked, without this tool — as templates.
+    """How to confirm the fix worked, without this tool: as templates.
 
     The steps a *finding* carries are filled in from the observation: the real
     URL, the real host, a request that was actually seen. A catalogue has no
@@ -60,7 +60,7 @@ class RemediationEntry:
     references: list[str] = field(default_factory=list)
     controls: dict[str, list[str]] = field(default_factory=dict)
     vendors: list[str] = field(default_factory=list)
-    """Which known vendors this pattern is the answer for — empty for a
+    """Which known vendors this pattern is the answer for: empty for a
     rule-specific fix."""
 
     def to_dict(self) -> dict[str, Any]:
@@ -116,7 +116,7 @@ def _rule_entry(rule, t: Translator) -> RemediationEntry:
 
     if rule.remediation_source == "vendor":
         # The fix belongs to whichever vendor triggered the rule, so the rule
-        # itself has no procedure to state — a finding gets one, this entry
+        # itself has no procedure to state: a finding gets one, this entry
         # cannot. Naming the applicable patterns is the useful answer; a made-up
         # generic procedure would be a worse one.
         applicable = sorted(
@@ -147,7 +147,7 @@ def _rule_entry(rule, t: Translator) -> RemediationEntry:
 def _pattern_entry(
     pattern: str, t: Translator, users: list[str], vendor=None
 ) -> RemediationEntry:
-    """A pattern, and — when the question named a vendor — filled in for it.
+    """A pattern, and (when the question named a vendor) filled in for it.
 
     The patterns are templates: "serve the asset from your own domain and drop
     the call to {product}". Asked in the abstract, the placeholder is the honest

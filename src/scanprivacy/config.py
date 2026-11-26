@@ -54,7 +54,7 @@ SCANS_DIR = DATA_DIR / "scans"
 
 # AGPL section 13. Someone who reaches this engine over a network is entitled to
 # its source, and the practical form of that offer is a URL an unauthenticated
-# caller can reach — `/healthz` carries it. The default names upstream; an
+# caller can reach: `/healthz` carries it. The default names upstream; an
 # operator running a *modified* build owes their users their own source, not
 # ours, and points this at it.
 LICENCE = "AGPL-3.0-only"
@@ -67,7 +67,7 @@ SOURCE_URL = os.environ.get("SCANPRIVACY_SOURCE_URL", "").strip() or SOURCE_URL_
 # geo-gated, CDNs answer from different edges, and some hosts serve nothing at
 # all outside their market. Two honest scans of one site can therefore disagree
 # for a reason that has nothing to do with the site, and the evidence record had
-# no field in which to say so — which makes the disagreement look like a change
+# no field in which to say so: which makes the disagreement look like a change
 # on the site, or worse, like an error in one of the two reports.
 #
 # Determined the way this engine determines everything else: by declaration or
@@ -79,7 +79,7 @@ SOURCE_URL = os.environ.get("SCANPRIVACY_SOURCE_URL", "").strip() or SOURCE_URL_
 # Neither is set by default, and the record then says the vantage point is
 # undetermined rather than omitting the field. An engine that asks a third party
 # where it is, on every scan, would be sending the operator's address to a
-# company nobody chose in order to write a privacy report — the exact shape of
+# company nobody chose in order to write a privacy report: the exact shape of
 # the thing it exists to report. So the lookup is opt-in, the endpoint is the
 # operator's to name, and the record always states which of the three happened.
 VANTAGE_DECLARED = os.environ.get("SCANPRIVACY_VANTAGE", "").strip()
@@ -111,7 +111,7 @@ UA = (
 # identity posture of this engine is that it says who it is and leaves a contact
 # address; retrying as a generic browser the moment a site declines is the
 # opposite of that, and on a hosted service it is simply evasion. Whichever
-# string actually reached the site is the one the report states — see
+# string actually reached the site is the one the report states: see
 # `scanner.py`.
 UA_FALLBACK = "Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0"
 
@@ -137,7 +137,7 @@ class Settings:
     ua_fallback_on_block: bool = False
     """Retry once as a plain browser when the identified User-Agent is refused.
 
-    Off by default. The retry is not dishonest — we are a browser either way —
+    Off by default. The retry is not dishonest: we are a browser either way:
     but it drops the contact address the site owner would need to object, so it
     has to be something an operator turns on for their own estate rather than
     something that happens to a stranger's site without anyone deciding."""

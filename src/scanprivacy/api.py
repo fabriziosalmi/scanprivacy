@@ -13,7 +13,7 @@
 
 Scans run in the background; the POST returns immediately with an id. The
 stored result carries no sentences, so the language is chosen when a report is
-requested — the same scan renders in any locale without re-observing anything.
+requested: the same scan renders in any locale without re-observing anything.
 """
 
 from __future__ import annotations
@@ -75,8 +75,8 @@ app = FastAPI(
 # How much of this machine one caller may occupy.
 #
 # A scan launches a Chromium. Without a ceiling, a loop of POSTs launches as
-# many as the caller cares to ask for, and the store below keeps every result —
-# observation included — for the lifetime of the process. Neither needed an
+# many as the caller cares to ask for, and the store below keeps every result:
+# observation included: for the lifetime of the process. Neither needed an
 # attacker: a well-meaning script with a list of domains would do it.
 MAX_CONCURRENT_SCANS = env_int("SCANPRIVACY_MAX_CONCURRENT_SCANS", 3)
 MAX_SCANS_IN_FLIGHT = env_int("SCANPRIVACY_MAX_SCANS_IN_FLIGHT", 50)
@@ -220,7 +220,7 @@ async def _observe(scan_id: str, request: ScanRequest) -> None:
         )
         # The pre-flight check resolved a name and decided; this checks where
         # the browser actually went. Between the two, a record can change and a
-        # redirect can move the destination entirely — so the observation is
+        # redirect can move the destination entirely: so the observation is
         # discarded rather than returned, which is what makes the attempt
         # worthless to whoever made it.
         try:
@@ -253,7 +253,7 @@ async def _observe(scan_id: str, request: ScanRequest) -> None:
     except Exception as exc:
         # The client is told a scan failed and is given a reference; the cause
         # goes to the log. An exception's text carries filesystem paths, module
-        # layout and sometimes the content that caused it — detail that helps
+        # layout and sometimes the content that caused it: detail that helps
         # whoever operates the service and helps an attacker equally.
         logger.exception("scan %s failed", scan_id)
         _SCANS[scan_id].update(
@@ -389,7 +389,7 @@ async def create_scan(request: ScanRequest, background: BackgroundTasks) -> dict
         raise HTTPException(status_code=400, detail="invalid url: only http/https are accepted")
     # Across an HTTP boundary the caller chooses the target, so the service
     # must not be usable as a probe into the network it happens to run on.
-    # The command line deliberately has no such check — see core/target.py.
+    # The command line deliberately has no such check: see core/target.py.
     try:
         await asyncio.to_thread(check_public_target, request.url)
     except TargetRefused as refused:
@@ -431,7 +431,7 @@ async def create_scan(request: ScanRequest, background: BackgroundTasks) -> dict
 async def get_scan(scan_id: str) -> JSONResponse:
     entry = _get(scan_id)
     if entry["status"] != "done":
-        # error_detail is deliberately not in this payload — see _observe.
+        # error_detail is deliberately not in this payload: see _observe.
         return JSONResponse(
             {
                 "scan_id": scan_id,
@@ -471,12 +471,13 @@ async def get_report_pdf(scan_id: str, lang: str = Query(DEFAULT_LOCALE)) -> Res
     # worth confirming rather than reasoning about.
     if path.resolve().parent != SCANS_DIR.resolve():
         raise HTTPException(status_code=400, detail="invalid report path")
-    render_pdf(result, path, lang)
-    domain = result.site.get("domain", scan_id)
+    await asyncio.to_thread(render_pdf, result, path, lang)
+    raw_domain = str(result.site.get("domain") or scan_id)
+    safe_domain = re.sub(r"[^A-Za-z0-9._-]", "_", raw_domain).strip("._-") or scan_id
     return Response(
         content=path.read_bytes(),
         media_type="application/pdf",
-        headers={"content-disposition": f'inline; filename="scanprivacy-{domain}-{lang}.pdf"'},
+        headers={"content-disposition": f'inline; filename="scanprivacy-{safe_domain}-{lang}.pdf"'},
     )
 
 

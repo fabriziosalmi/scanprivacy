@@ -7,8 +7,8 @@ deploying it.
 
 Across an HTTP boundary it is the opposite. An endpoint that fetches any URL a
 stranger submits is a probe into whatever network the service happens to run
-on — the cloud metadata service on its link-local address, an internal dashboard on a private
-range, a service listening only on loopback — and this engine hands the result
+on: the cloud metadata service on its link-local address, an internal dashboard on a private
+range, a service listening only on loopback: and this engine hands the result
 back in a report. So the API validates and the CLI does not, and the asymmetry
 is the point rather than an oversight.
 
@@ -99,7 +99,7 @@ def check_public_target(url: str, *, resolver=socket.getaddrinfo) -> TargetCheck
         for info in infos:
             try:
                 addresses.append(ipaddress.ip_address(info[4][0]))
-            except ValueError:  # pragma: no cover — the resolver returned a non-address
+            except ValueError:  # pragma: no cover: the resolver returned a non-address
                 continue
         if not addresses:
             raise TargetRefused("does_not_resolve", "no usable address")
@@ -116,12 +116,12 @@ def check_observed_peers(peers) -> None:
 
     `check_public_target` resolves a name and decides; between that decision and
     the fetch, the record can change, and a redirect moves the destination after
-    the check entirely. Neither is exotic — rebinding to 127.0.0.1 after a
+    the check entirely. Neither is exotic: rebinding to 127.0.0.1 after a
     passing check is the standard way around a pre-flight guard.
 
     This is the answer instead of the prediction: the addresses the browser
     reports having connected to. It runs after the observation, so it cannot
-    prevent the request — the API's job here is to refuse to hand back what
+    prevent the request: the API's job here is to refuse to hand back what
     came of it, which is what makes the request worthless to whoever sent it.
 
     `None` entries are ignored: an address the browser did not report is not an

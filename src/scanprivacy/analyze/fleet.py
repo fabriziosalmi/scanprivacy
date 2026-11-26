@@ -3,7 +3,7 @@
 A single report tells an owner what to fix. A fleet tells them what they keep
 doing: the same font CDN on thirty sites is one decision made once and repeated,
 not thirty problems. That reframing is the whole value of scanning a fleet, and
-it is why the aggregate counts **sites affected** rather than findings — one
+it is why the aggregate counts **sites affected** rather than findings: one
 site with five copies of a form must not outweigh five sites with one each.
 
 Nothing here reaches the network. It reads results that already exist, so a

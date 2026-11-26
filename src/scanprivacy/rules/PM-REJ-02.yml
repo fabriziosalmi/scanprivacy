@@ -3,7 +3,7 @@
 # through i18n/locales/<lang>/references.yml, and ownership and control
 # mappings are in knowledge/frameworks.yml.
 #
-# `pass: refusal` — this rule belongs to the refusal pass, an opt-in mode that
+# `pass: refusal`: this rule belongs to the refusal pass, an opt-in mode that
 # interacts with the consent mechanism. It never fires in a passive scan.
 id: PM-REJ-02
 severity: critical

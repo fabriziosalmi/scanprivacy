@@ -3,7 +3,7 @@
 # through i18n/locales/<lang>/references.yml, and ownership and control
 # mappings are in knowledge/frameworks.yml.
 #
-# `pass: refusal` — this rule belongs to the refusal pass, an opt-in mode that
+# `pass: refusal`: this rule belongs to the refusal pass, an opt-in mode that
 # interacts with the consent mechanism. It never fires in a passive scan.
 id: PM-REJ-01
 severity: critical
@@ -23,7 +23,7 @@ condition:
   refusal_performed: true
   vendor_third_party: true
   # The site answers for the embed it chose, not for what that embed
-  # loads inside itself — which it cannot see, configure or prevent.
+  # loads inside itself: which it cannot see, configure or prevent.
   vendor_via_embed: false
   vendor_consent_class_any:
   - required

@@ -1,6 +1,6 @@
 # Aliases: the strings searched in a site's OWN privacy notice to decide whether
-# a vendor is actually declared. They are language-specific by nature — a notice
-# written in English names things the way English does — and the engine matches
+# a vendor is actually declared. They are language-specific by nature: a notice
+# written in English names things the way English does: and the engine matches
 # against the union of every locale, because the language of the notice is not
 # known in advance.
 #

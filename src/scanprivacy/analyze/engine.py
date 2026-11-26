@@ -1,7 +1,7 @@
 """Rule evaluation: context + rules -> findings.
 
 The engine loads logic, never prose. It emits findings that carry canonical
-values, catalogue keys and parameters — the sentences are assembled later, in
+values, catalogue keys and parameters: the sentences are assembled later, in
 whatever language the report is asked for.
 """
 
@@ -38,7 +38,7 @@ class Rule:
     """Which observation a rule belongs to. `passive` rules describe what the
     site does to a visitor who has not decided; `refusal` rules describe what it
     does to one who said no. Mixing them in one document would make both weaker
-    — and the refusal pass interacts with the page, which the passive one never
+   : and the refusal pass interacts with the page, which the passive one never
     does."""
 
 
@@ -88,7 +88,7 @@ def _remediation(rule: Rule, ctx: Context, subject: Subject) -> RemediationRef:
     if ctx.platform_id:
         params["platform_hint_key"] = f"platform.{ctx.platform_id}.hint"
         params["platform_name"] = ctx.platform_name
-    # Only for rules a response header alone can satisfy — see `_extra_evidence`.
+    # Only for rules a response header alone can satisfy: see `_extra_evidence`.
     if "header_missing" in rule.condition and ctx.fixed_header_platform:
         params["platform_constraint_key"] = (
             f"remediation.constraint.{ctx.fixed_header_platform}"
@@ -117,14 +117,14 @@ def _confidence(rule: Rule, ctx: Context) -> Confidence:
     path transcribed from a vendor's documentation and never exercised is not
     established: the call may exist, return cleanly and do nothing, and from
     outside the page that is indistinguishable from a site ignoring it. Stating
-    it as `certain` would put an accusation on an unproven premise — and the
+    it as `certain` would put an accusation on an unproven premise: and the
     catalogue is eight documented entries to one verified.
     """
     refusal = getattr(ctx, "refusal", None)
     if rule.pass_ != "refusal" or refusal is None:
         return rule.confidence
     # Default False, not True: a refusal record that does not say how far its
-    # path is proven — an older evidence file, a partial double — has not
+    # path is proven (an older evidence file, a partial double) has not
     # established anything, and the weaker claim is the safe direction.
     if not getattr(refusal, "path_proven", False):
         return Confidence.PROBABLE
@@ -161,7 +161,7 @@ def _extra_evidence(rule: Rule, ctx: Context, subject: Subject) -> dict[str, Any
         extra["observed_headers"] = sorted(ctx.obs.response_headers.keys())
         # A response header is the only way to satisfy this rule, and some
         # hosting serves a fixed set nobody using it can add to. The finding
-        # stays — it is true, and the exposure is real — but a reader has to be
+        # stays (it is true, and the exposure is real) but a reader has to be
         # told it cannot be closed where the site currently lives, or the
         # instruction to "set the header" sends them to look for a setting that
         # does not exist. Rules with a `<meta>` equivalent (CSP,
@@ -198,7 +198,7 @@ def _extra_evidence(rule: Rule, ctx: Context, subject: Subject) -> dict[str, Any
 
 
 def evaluate(ctx: Context, rules: list[Rule] | None = None) -> list[Finding]:
-    """Findings from an observation — and nothing at all without one.
+    """Findings from an observation: and nothing at all without one.
 
     The register is fail-closed: nothing is graded green unless it was observed
     to be green. The converse binds just as hard, and was not being honoured.
@@ -209,8 +209,8 @@ def evaluate(ctx: Context, rules: list[Rule] | None = None) -> list[Finding]:
     the way to confirm it.
 
     Absence of observation is not observation of absence. With no page load the
-    honest output is the empty set, and the verdict — already INCONCLUSIVE via
-    `observed_ok` — is what carries the meaning.
+    honest output is the empty set, and the verdict: already INCONCLUSIVE via
+    `observed_ok`: is what carries the meaning.
     """
     if not ctx.obs.load_ok:
         return []

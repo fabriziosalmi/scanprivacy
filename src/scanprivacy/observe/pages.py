@@ -9,8 +9,8 @@ Two constraints shape the selection:
 - **Deterministic.** The same site must yield the same pages, or two scans stop
   being comparable and `scanprivacy diff` starts reporting churn that never happened.
   Every ordering here is total: kind, then depth, then URL.
-- **Representative, not exhaustive.** A handful of pages of *different kinds* —
-  the entry, a contact page, a service page, a leaf article — surfaces far more
+- **Representative, not exhaustive.** A handful of pages of *different kinds*:
+  the entry, a contact page, a service page, a leaf article: surfaces far more
   than ten pages of the same news index. Crawling deeper is somebody else's
   budget and somebody else's server.
 """
@@ -84,7 +84,7 @@ DESTRUCTIVE_PATH = re.compile(
 # Campaign parameters identify a *visit*, not a page: two URLs that differ only
 # by utm_source are the same page and must normalise to the same string.
 # Filtering happens per parameter, not per query: dropping the whole query would
-# collapse `?id=42` — which does identify a page — onto the bare path.
+# collapse `?id=42` (which does identify a page) onto the bare path.
 TRACKING_PARAMS = frozenset(
     {
         "gclid", "fbclid", "msclkid", "dclid", "twclid", "igshid", "mc_cid", "mc_eid",
@@ -103,7 +103,7 @@ class PageCandidate:
     why: str
     """Why this page was chosen, as a catalogue key.
 
-    A phrase here would be an English phrase, and it is printed in the report —
+    A phrase here would be an English phrase, and it is printed in the report:
     which is rendered in the reader's language. Keys are resolved at render
     time, like every other sentence the engine produces."""
 
@@ -112,7 +112,7 @@ def normalise(url: str) -> str:
     """One canonical form per page, so the same page is never visited twice.
 
     Fragments dropped, trailing slash normalised, query kept only when it is not
-    obviously navigational noise — `?id=42` identifies a page, `?utm_source=x`
+    obviously navigational noise: `?id=42` identifies a page, `?utm_source=x`
     does not.
     """
     url, _ = urldefrag(url)
@@ -150,8 +150,8 @@ def same_deployment(host: str, site_host: str) -> bool:
     to a codebase that has no jsDelivr in it.
 
     The apex and its `www.` are the one pair that really is a single
-    deployment — usually the same server, and typically one redirecting to the
-    other — so they stay together.
+    deployment (usually the same server, and typically one redirecting to the
+    other) so they stay together.
     """
     return _apex(host) == _apex(site_host)
 

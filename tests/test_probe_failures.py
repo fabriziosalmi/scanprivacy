@@ -45,6 +45,8 @@ def test_the_consent_framework_probe_has_three_states_not_two():
 def test_an_incomplete_observation_says_so_in_the_report():
     """Recording the failure and not showing it would fix nothing: the reader
     is the one who has to know the silence is not an answer."""
+    from scanprivacy.report.pdf import render_html
+
     result = ScanResult(
         scan_id="t", url="https://x.it/", final_url="https://x.it/",
         started_at="", finished_at="", status=ScanStatus.OK,
@@ -55,6 +57,9 @@ def test_an_incomplete_observation_says_so_in_the_report():
         text = render(result, locale)
         assert "web_storage: TimeoutError" in text
         assert "⟦" not in text, "unresolved catalogue key"
+        html = render_html(result, locale)
+        assert "web_storage: TimeoutError" in html
+        assert "⟦" not in html, "unresolved catalogue key"
 
 
 def test_a_complete_observation_adds_no_such_notice():

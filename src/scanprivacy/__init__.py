@@ -1,4 +1,4 @@
-"""scanprivacy — passive EU privacy conformance engine.
+"""scanprivacy: passive EU privacy conformance engine.
 
 URL in, findings graph + remediation out.
 """

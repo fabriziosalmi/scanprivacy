@@ -1,7 +1,7 @@
 """SARIF 2.1.0 export.
 
 The point is not the file format. It is that a privacy finding becomes an item
-in the same queue a developer already works from — GitHub's Security tab —
+in the same queue a developer already works from: GitHub's Security tab:
 instead of a PDF somebody has to remember to read.
 
 Three properties make the difference between a tolerated integration and a
@@ -87,7 +87,7 @@ def _rule_help_markdown(rendered: RenderedFinding, t: Translator) -> str:
 
 def _message(rendered: RenderedFinding, t: Translator, anchor: SourceAnchor | None) -> str:
     """What the developer reads in the alert. Title, then the fix, then the
-    steps — anything longer than this gets skimmed."""
+    steps: anything longer than this gets skimmed."""
     lines = [rendered.title]
     if rendered.remediation:
         lines.append("")
@@ -106,7 +106,7 @@ def _message(rendered: RenderedFinding, t: Translator, anchor: SourceAnchor | No
         lines.append(f"`{anchor.token}` {relation} {anchor.path}:{anchor.line}")
         if anchor.kind == "mention":
             lines.append(
-                "  (the line names the host but does not appear to load it — the inclusion may be elsewhere)"
+                "  (the line names the host but does not appear to load it; the inclusion may be elsewhere)"
             )
     return "\n".join(lines)
 
@@ -123,9 +123,9 @@ def _location(anchor: SourceAnchor | None, fallback: str, url: str) -> dict[str,
             },
             "message": {
                 "text": (
-                    f"{anchor.token} — {url}"
+                    f"{anchor.token} ({url})"
                     if anchor.kind == "inclusion"
-                    else f"{anchor.token} named here; the inclusion may be elsewhere — {url}"
+                    else f"{anchor.token} named here; the inclusion may be elsewhere ({url})"
                 )
             },
         }
@@ -192,11 +192,9 @@ def build_sarif(
                 "level": _LEVEL[finding.severity],
                 "message": {"text": _message(rendered, t, anchor)},
                 "locations": [_location(anchor, anchor_file, result.final_url)],
-                # Renamed with the project. Code scanning correlates alerts
-                # across runs by this key, so changing it recreates every alert
-                # — which is why it carries a version. Nothing has consumed it
-                # yet: the action is unpublished and the repository is private,
-                # so now is the only free moment to do this.
+                # Code scanning correlates alerts across runs by this key, so
+                # changing it recreates every alert, which is why it carries a
+                # version.
                 "partialFingerprints": {"scanprivacyFindingId/v1": fingerprint(finding.id)},
                 "properties": {
                     "findingId": finding.id,

@@ -20,7 +20,7 @@ references:
 condition:
   vendor_third_party: true
   # The site answers for the embed it chose, not for what that embed
-  # loads inside itself — which it cannot see, configure or prevent.
+  # loads inside itself: which it cannot see, configure or prevent.
   vendor_via_embed: false
   vendor_consent_class_any:
   - required

@@ -1,8 +1,8 @@
 """Derived facts: everything the rules are allowed to ask about.
 
 The observation layer records what happened. This layer turns it into legal
-facts — who the third parties are, which of them the notice declares, which
-cookies are tracking cookies, which Art. 13 elements are missing — and nothing
+facts: who the third parties are, which of them the notice declares, which
+cookies are tracking cookies, which Art. 13 elements are missing: and nothing
 else. Rules see only this, and only through predicates.
 """
 
@@ -120,7 +120,7 @@ class VendorFact:
     not chosen the fonts YouTube then loads inside its own player: it cannot see
     them, configure them or prevent them, and the only fix available to it is
     the one it already has for the embed. Reporting them as processors the site
-    selected produces findings whose owner has no way to act on them — on the
+    selected produces findings whose owner has no way to act on them: on the
     site that exposed this, "the operator chose Google Fonts" about a site whose
     own CSP says `font-src 'self'`.
 
@@ -147,7 +147,7 @@ class CookieFact:
 class FormFact:
     """One form, however many pages carry it.
 
-    A login form in a shared header is one form, not one per page — counting it
+    A login form in a shared header is one form, not one per page: counting it
     per page inflates the report the same way counting a vendor per page would.
     The identity is what the form *is* (its destination and its fields), which
     also makes the finding id stable across scans: an index would shift as soon
@@ -164,7 +164,7 @@ class FormFact:
         Field names are not stable: a CSRF token is a fresh hex string on every
         load, and anti-spam honeypots rotate their name from a word list. On the
         pilot site that produced five findings for one login form, each with a
-        different id — which would also have meant five new SARIF alerts on
+        different id: which would also have meant five new SARIF alerts on
         every scan. The type profile is stable and still distinguishes a login
         form from a search box.
         """
@@ -297,7 +297,7 @@ class Context:
         It enforces nothing, so a site that has only this one has no policy in
         force and `PM-SEC-03` is right to fire. But telling an operator "no
         Content-Security-Policy" when their response carries a header by very
-        nearly that name is how a true finding gets dismissed as a false one —
+        nearly that name is how a true finding gets dismissed as a false one:
         they check, they see a CSP, they stop reading. The finding stands; the
         evidence says which of the two situations it is."""
         return self.header("content-security-policy-report-only")
@@ -305,9 +305,9 @@ class Context:
     def effective_csp(self) -> tuple[str | None, str]:
         """The policy actually in force, and where it comes from.
 
-        A meta element is a weaker instrument than a header — it cannot carry
+        A meta element is a weaker instrument than a header: it cannot carry
         `frame-ancestors` or `report-uri`, and it applies only from the point
-        the parser reaches it — but it is a real policy, and on hosting that
+        the parser reaches it: but it is a real policy, and on hosting that
         forbids custom headers it is the only one available.
         """
         header = self.header("content-security-policy")
@@ -351,7 +351,7 @@ def _embed_origin(req: Request, site_host: str) -> str | None:
 
     None covers three cases that are all "the site did this": the page issued
     the request itself, the frame belongs to the site, and the frame is the
-    vendor loading its own resources — a YouTube player fetching from YouTube is
+    vendor loading its own resources: a YouTube player fetching from YouTube is
     still the embed the site chose, and the request that fetches the frame's own
     document is issued by that frame before it has a URL to be judged by.
     """

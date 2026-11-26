@@ -2,7 +2,7 @@
 
 This module answers questions of fact about a network host: who operates it,
 where they process, whether they touch the terminal, who has to fix it. Every
-answer is a canonical value or a catalogue key — no display strings leave this
+answer is a canonical value or a catalogue key: no display strings leave this
 module, so the same facts render in any language.
 """
 
@@ -56,7 +56,7 @@ class Vendor:
     data_types: tuple[DataType, ...]
     remediation: VendorRemediation
     vendor: str | None = None
-    """Legal entity. `None` for a host we could not attribute — the display name
+    """Legal entity. `None` for a host we could not attribute: the display name
     then comes from the catalogue key below, because "Unidentified third party"
     is a phrase and phrases are translated."""
     vendor_key: str | None = None
@@ -223,7 +223,11 @@ def mapping_for(rule_id: str) -> Mapping:
 
 def registered_domain(host: str) -> str:
     ext = tldextract.extract(host)
-    domain = getattr(ext, "top_domain_under_public_suffix", None) or ext.registered_domain
+    domain = (
+        ext.top_domain_under_public_suffix
+        if hasattr(ext, "top_domain_under_public_suffix")
+        else ext.registered_domain
+    )
     return (domain or host).lower()
 
 

@@ -8,8 +8,6 @@ from ..i18n.escaping import md_code, md_escape
 from ..i18n.translator import DEFAULT_LOCALE, Translator
 from .render import scan_posture_rows, render_finding, render_scan
 
-_ICON = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🔵", "info": "⚪️"}
-
 
 def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool = True) -> str:
     # What the scanned site chose (names, hosts, URLs, titles) is escaped where it meets the
@@ -33,7 +31,7 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
     verdict_text = (
         t.t("report.verdict_conformant") if scan.conformant else t.t("report.verdict_not_conformant")
     )
-    add(f"**{scan.grade}** — {verdict_text}  ")
+    add(f"**{scan.grade}**: {verdict_text}  ")
     add(f"{scan.verdict_note}")
     add("")
 
@@ -104,7 +102,7 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
         add(t.t("report.headings.no_findings"))
         add("")
     for finding in scan.findings:
-        add(f"### {_ICON.get(finding.severity_value, '•')} {finding.title}")
+        add(f"### {finding.title}")
         add("")
         meta = [
             md_code(finding.id),
@@ -149,7 +147,7 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
             add("")
         if finding.remediation:
             rem = finding.remediation
-            add(f"**{t.t('report.labels.remediation', effort=rem.effort)}** — {rem.summary}")
+            add(f"**{t.t('report.labels.remediation', effort=rem.effort)}**: {rem.summary}")
             add("")
             for step in rem.steps:
                 add(f"1. {step}")
@@ -194,7 +192,7 @@ def render(result: ScanResult, locale: str = DEFAULT_LOCALE, include_graph: bool
             page = observed.get(planned["url"]) or {}
             add(
                 f"| {index} | {md_code(planned['url'])} | {t.t('page_kind.' + planned.get('kind', 'other'))} "
-                f"| {page.get('status') or '—'} | {len(page.get('requests') or [])} |"
+                f"| {page.get('status') or '-'} | {len(page.get('requests') or [])} |"
             )
         add("")
 

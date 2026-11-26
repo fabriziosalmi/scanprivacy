@@ -3,17 +3,17 @@
 A site does not behave the same towards every observer. Consent banners are
 geo-gated, CDNs answer from different edges, some hosts serve nothing outside
 their market. Two honest scans of one site can disagree for a reason that has
-nothing to do with the site — and without this field the disagreement reads as
+nothing to do with the site: and without this field the disagreement reads as
 a change on the site, or as an error in one of the two reports.
 
 Three states, and the record always carries one of them:
 
-- `declared` — the operator said where they are. No network call, no third
+- `declared`: the operator said where they are. No network call, no third
   party, and the operator is the one who knows.
-- `looked_up` — the operator opted into an endpoint and named it. What that
+- `looked_up`: the operator opted into an endpoint and named it. What that
   endpoint returned is recorded verbatim, along with which endpoint it was, so
   a reader can weigh it.
-- `undetermined` — neither was configured, or the lookup did not complete. Said
+- `undetermined`: neither was configured, or the lookup did not complete. Said
   plainly, with the reason, rather than omitted.
 
 The default is `undetermined`, and that is a deliberate refusal rather than an
@@ -31,13 +31,13 @@ from typing import Any
 from ..config import VANTAGE_DECLARED, VANTAGE_LOOKUP_URL
 
 # Only these are kept from a lookup response. A geolocation endpoint answers
-# with whatever it likes — postal codes, coordinates, a "readme" link — and a
+# with whatever it likes (postal codes, coordinates, a "readme" link) and a
 # report is not the place to paste an unbounded third-party payload.
 LOOKUP_FIELDS = ("ip", "city", "region", "country", "org", "asn", "timezone")
 
 
 def _lookup(url: str, timeout: float = 8.0) -> dict[str, Any]:
-    with urllib.request.urlopen(url, timeout=timeout) as response:  # noqa: S310 — operator-named
+    with urllib.request.urlopen(url, timeout=timeout) as response:  # noqa: S310 (operator-named)
         payload = json.load(response)
     if not isinstance(payload, dict):
         raise ValueError(f"expected a JSON object, got {type(payload).__name__}")
