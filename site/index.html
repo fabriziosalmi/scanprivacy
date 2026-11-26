@@ -19,27 +19,85 @@ scanprivacy scan https://example.org --pdf report.pdf --json evidence.json</code
   </section>
 </div>
 
+<section class="section" aria-labelledby="first-load">
+  <div class="frame section-grid">
+    <h2 id="first-load">Before the first click</h2>
+    <div>
+      <p class="section-intro">A consent banner can look compliant while trackers fire milliseconds earlier. Observing a clean first visit exposes the sequence before any choice is made.</p>
+      <div class="diagram">
+        <p class="diagram-caption">Typical first load, no user interaction</p>
+        <ol class="timeline">
+          <li class="tl-step tl-ok">
+            <span class="tl-time">0 ms</span>
+            <span class="tl-body"><strong>HTML document loaded</strong> <code>GET /</code></span>
+            <span class="tl-tag">First party</span>
+          </li>
+          <li class="tl-step tl-critical">
+            <span class="tl-time">42 ms</span>
+            <span class="tl-body"><strong>Third-party script requested</strong> <code>googletagmanager.com</code></span>
+            <span class="sev sev-critical">PM-CNS-01</span>
+          </li>
+          <li class="tl-step tl-high">
+            <span class="tl-time">85 ms</span>
+            <span class="tl-body"><strong>Tracking cookie written</strong> <code>_ga</code></span>
+            <span class="sev sev-high">PM-COK-01</span>
+          </li>
+          <li class="tl-step tl-critical">
+            <span class="tl-time">140 ms</span>
+            <span class="tl-body"><strong>Consent banner appears</strong> <span>Choice arrives after data already left</span></span>
+            <span class="sev sev-critical">PM-CNS-03</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section" aria-labelledby="observes">
   <div class="frame section-grid">
     <h2 id="observes">How it observes</h2>
-    <dl class="facts">
-      <div>
-        <dt>One visit, no choice</dt>
-        <dd>The page is loaded once, as a visitor who has neither accepted nor refused anything. What loads before that choice is what gets reported. The opt-in refusal pass is the only mode that touches a consent banner, and it writes a separate document.</dd>
-      </div>
-      <div>
-        <dt>Evidence first</dt>
-        <dd>Each finding lists the requests, cookies or headers that produced it, with steps to check it yourself using a browser and curl. A read that failed is a stated limit in the report, never an absence.</dd>
-      </div>
-      <div>
-        <dt>Polite by construction</dt>
-        <dd>It honours robots.txt, makes at most one page load per second to a host, never requests URLs that change state, and names its operator and a contact address in the User-Agent.</dd>
-      </div>
-      <div>
-        <dt>Reproducible</dt>
-        <dd>The JSON result carries digests of the observation and of the rules applied. <code>scanprivacy verify</code> recomputes them, and two results can be compared finding by finding with <code>scanprivacy diff</code>.</dd>
-      </div>
-    </dl>
+    <div class="stack">
+      <ol class="pipeline" aria-label="Four stages of a scan">
+        <li class="pipe-step">
+          <span class="pipe-num">01</span>
+          <strong>Input</strong>
+          <span>Any public URL. Nothing is installed on the site.</span>
+        </li>
+        <li class="pipe-step">
+          <span class="pipe-num">02</span>
+          <strong>Observe</strong>
+          <span>One clean browser visit: requests, cookies, storage, headers, TLS and legal notices.</span>
+        </li>
+        <li class="pipe-step">
+          <span class="pipe-num">03</span>
+          <strong>Check</strong>
+          <span>Evaluates GDPR, ePrivacy and AI Act rules against what the notice declares.</span>
+        </li>
+        <li class="pipe-step">
+          <span class="pipe-num">04</span>
+          <strong>Report</strong>
+          <span>Fail-closed grade A to F, with verifiable evidence, reproduction steps and fixes.</span>
+        </li>
+      </ol>
+      <dl class="facts">
+        <div>
+          <dt>One visit, no choice</dt>
+          <dd>The page is loaded once, as a visitor who has neither accepted nor refused anything. What loads before that choice is what gets reported. The opt-in refusal pass is the only mode that touches a consent banner, and it writes a separate document.</dd>
+        </div>
+        <div>
+          <dt>Evidence first</dt>
+          <dd>Each finding lists the requests, cookies or headers that produced it, with steps to check it yourself using a browser and curl. A read that failed is a stated limit in the report, never an absence.</dd>
+        </div>
+        <div>
+          <dt>Polite by construction</dt>
+          <dd>It honours robots.txt, makes at most one page load per second to a host, never requests URLs that change state, and names its operator and a contact address in the User-Agent.</dd>
+        </div>
+        <div>
+          <dt>Reproducible</dt>
+          <dd>The JSON result carries digests of the observation and of the rules applied. <code>scanprivacy verify</code> recomputes them, and two results can be compared finding by finding with <code>scanprivacy diff</code>.</dd>
+        </div>
+      </dl>
+    </div>
   </div>
 </section>
 
@@ -67,8 +125,26 @@ scanprivacy scan https://example.org --pdf report.pdf --json evidence.json</code
 <section class="section" aria-labelledby="evidence">
   <div class="frame section-grid">
     <h2 id="evidence">Evidence you can check</h2>
-    <div>
+    <div class="stack">
       <p>A report is a claim about a site at one moment. The JSON result next to it holds what was observed, and the digests in it let anyone confirm that the report describes that evidence and that the same rules were applied.</p>
+      <ol class="chain" aria-label="Verification chain from observation to transparency log">
+        <li class="chain-node">
+          <strong>Observation</strong>
+          <code>evidence.json</code>
+        </li>
+        <li class="chain-node">
+          <strong>SHA-256 digests</strong>
+          <span>evidence, rules, knowledge</span>
+        </li>
+        <li class="chain-node">
+          <strong>in-toto statement</strong>
+          <span>binds PDF, SARIF, JSON</span>
+        </li>
+        <li class="chain-node">
+          <strong>Cosign + Rekor</strong>
+          <span>public transparency log</span>
+        </li>
+      </ol>
       <pre data-copy><code>$ scanprivacy verify evidence.json
 evidence intact    : yes
 findings intact    : yes
