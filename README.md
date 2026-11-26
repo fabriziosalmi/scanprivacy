@@ -226,7 +226,7 @@ A report that cannot be re-derived is an opinion. Every scan carries:
 ## For whoever reads the report
 
 Each finding carries, besides the legal reference: the **owner** who can close
-it (dpo / cto / sysops / security / legal / procurement), a **priority** P1–P5
+it (dpo / cto / sysops / security / legal / procurement), a **priority** P1 to P5
 (severity corrected for effort, so a high finding fixable in ten minutes comes
 first), a **quick win** marker, its technical **domain**, and a **control
 mapping** to GDPR, ePrivacy, the AI Act, NIS2, ISO/IEC 27001:2022, ISO/IEC
@@ -349,14 +349,14 @@ SVG is generated locally, committed, and loads nothing.
 ## Architecture
 
 ```text
-core/        enums.py (canonical vocabularies) · models.py (language-neutral) · graph.py
-i18n/        translator.py · locales/{en,it}/
-knowledge/   registry.py · vendors.yml · platforms.yml · frameworks.yml
+core/        enums.py (canonical vocabularies) · models.py (language-neutral) · graph.py · target.py
+i18n/        translator.py · escaping.py · locales/{en,it}/
+knowledge/   registry.py · remediation.py · vendors.yml · consent.yml · platforms.yml · frameworks.yml
 rules/       31 logic-only rules: 27 passive, 4 in the refusal pass (see rules/README.md)
-observe/     browser.py · discover.py (which link is really the notice) · docs.py · tls.py · robots.py
-analyze/     context.py (facts) → subjects.py · predicates.py · engine.py → graph.py · verdict.py · diff.py
-report/      render.py (facts → sentences, once) · markdown.py · pdf.py · record.py · templates/
-api.py · cli.py · scanner.py
+observe/     browser.py · pages.py · discover.py · docs.py · consent.py · tls.py · robots.py · egress.py · guard.py · rate.py · vantage.py
+analyze/     context.py (facts) -> subjects.py · predicates.py · engine.py -> graph.py · verdict.py · diff.py · dpia.py · fleet.py · verify.py
+report/      render.py (facts -> sentences, once) · markdown.py · pdf.py · sarif.py · badge.py · attestation.py · anchor.py · record.py · templates/
+api.py · auth.py · batch.py · cli.py · config.py · repeat.py · scanner.py
 ```
 
 ### The graph
@@ -440,7 +440,7 @@ when the verdict is not conformant, so it works as a CI gate.
 ## Development
 
 ```bash
-python3.12 -m venv .venv && ./.venv/bin/pip install -e '.[dev]'
+python3 -m venv .venv && ./.venv/bin/pip install -e '.[dev]'
 ./.venv/bin/python -m playwright install chromium
 ./.venv/bin/python -m pytest tests -q
 ```
@@ -490,19 +490,26 @@ completeness of every locale.
   where it knows. GitHub Pages serves a fixed set of response headers and
   permits none, so `PM-SEC-01` (HSTS) is true there and cannot be closed in
   place; the finding stays, states the constraint, and names a fix that can
-  actually be performed. The catalogue of such platforms is one vendor long on purpose: a platform is added only when it was measured not to send the header, its vendor states that owners cannot set it, and the engine can recognise it. Eleven platforms were measured on 2026-11-04; the method, the results and the one candidate left out are in [docs/platforms.md](https://github.com/fabriziosalmi/scanprivacy/blob/main/docs/platforms.md); GitLab Pages is the open candidate ([#23](https://github.com/fabriziosalmi/scanprivacy/issues/23)).
+  actually be performed. The catalogue of such platforms is one vendor long on
+  purpose: a platform is added only when it was measured not to send the header,
+  its vendor states that owners cannot set it, and the engine can recognise it.
+  Eleven platforms were measured on 2026-11-04; the method, the results and the
+  one candidate left out are in
+  [docs/platforms.md](https://github.com/fabriziosalmi/scanprivacy/blob/main/docs/platforms.md);
+  GitLab Pages is the open candidate
+  ([#23](https://github.com/fabriziosalmi/scanprivacy/issues/23)).
 - Art. 13 elements are recognised from text: an unusual wording can escape
   detection, which is why documentary findings carry `probable` confidence.
   Measured on 21 labelled public notices: precision 0.93, recall 0.90 (0.98 and
   0.89 on six held out while tuning). The method, the corpus and what is still
-  missed are in [docs/art13-measurement.md](https://github.com/fabriziosalmi/scanprivacy/blob/main/docs/art13-measurement.md). A second reader for the labels and more Italian public-body notices are wanted ([#24](https://github.com/fabriziosalmi/scanprivacy/issues/24)).
+  missed are in
+  [docs/art13-measurement.md](https://github.com/fabriziosalmi/scanprivacy/blob/main/docs/art13-measurement.md).
+  A second reader for the labels and more Italian public-body notices are wanted
+  ([#24](https://github.com/fabriziosalmi/scanprivacy/issues/24)).
 - Infrastructure providers are inferred from response headers: this covers the
-  well-known CDNs and edges, not every hosting arrangement. Signatures are added one provider at a time ([#25](https://github.com/fabriziosalmi/scanprivacy/issues/25)).
-- Not planned, on purpose. What a site does **after** acceptance is not verified, because
-  accepting means clicking, and this engine does not interact with a site. Requests made inside
-  a third-party iframe are attributed to that embed, because the operator can neither see nor
-  prevent what the embed then loads. Sibling hosts are not followed, because they are usually a
-  different codebase and a different owner; `scanprivacy batch` covers them.
+  well-known CDNs and edges, not every hosting arrangement. Signatures are added
+  one provider at a time
+  ([#25](https://github.com/fabriziosalmi/scanprivacy/issues/25)).
 - When a read of the page does not complete, the report says so under *Stated
   limits* and names the probe. An observation that could not finish is not the
   same as one that found nothing, and neither is treated as the other.

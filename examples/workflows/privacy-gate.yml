@@ -74,12 +74,12 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: [
-                `**scanprivacy — ${grade}**`,
+                `**scanprivacy: ${grade}**`,
                 ``,
                 `${findings} findings, ${anchored} anchored to a source line.`,
                 `Details in the Security tab; full evidence in the run artifacts.`,
                 ``,
-                `<sub>evidence digest \`${digest.slice(0, 16)}…\` — reproduce with `,
+                `<sub>evidence digest \`${digest.slice(0, 16)}...\` · reproduce with `,
                 `\`scanprivacy verify scanprivacy.json\`</sub>`,
               ].join('\n')
             });

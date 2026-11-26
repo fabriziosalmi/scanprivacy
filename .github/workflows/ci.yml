@@ -4,8 +4,8 @@
 # suite that skips every Playwright test still reports "passed" and would have
 # hidden the orchestration and robots.txt guarantees entirely. The PDF system
 # libraries are installed, for the same reason. And every `uses:` is pinned to a
-# commit — tests/test_workflows.py enforces that over this file too, since CI
-# runs with a token and a moved tag is a moved dependency.
+# commit (tests/test_workflows.py enforces that over this file too, since CI
+# runs with a token and a moved tag is a moved dependency).
 
 name: ci
 
@@ -66,14 +66,14 @@ jobs:
         # `verify-attestation` are the mechanism behind the claim that a report
         # can be shown to be the one that was published, and the round-trip test
         # for them is gated on cosign being present. Without this it skipped
-        # here and ran only on the author's laptop — which is not a place a
+        # here and ran only on the author's laptop, which is not a place a
         # regression gets caught.
         uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3
 
       - name: Test
         # `-rs` lists every skip and its reason. A skipped test is not a failure,
         # but a run that hides which tests did not execute is a green tick over
-        # an unknown quantity — and finding out took reading two logs.
+        # an unknown quantity, and finding out took reading two logs.
         run: python -m pytest -q -rs --cov --cov-fail-under=85
 
   lint:

@@ -1,6 +1,6 @@
 # Rule catalogue
 
-Generated from `scanprivacy rules` (27 rules in the passive scan, version 0.1.0) plus the 4 `PM-REJ` rules of the opt-in refusal pass, taken from the rule files. The definition of each rule, with its legal basis and the evidence it requires, is in `src/scanprivacy/rules/<ID>.yml`. Placeholders in braces are filled from the observation.
+Generated from `scanprivacy rules` (27 rules in the passive scan) plus the 4 `PM-REJ` rules of the opt-in refusal pass, taken from the rule files. The definition of each rule, with its legal basis and the evidence it requires, is in `src/scanprivacy/rules/<ID>.yml`. Placeholders in braces are filled from the observation.
 
 | Rule | Severity | Subject | Title |
 |------|----------|---------|-------|

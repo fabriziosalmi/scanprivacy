@@ -26,15 +26,15 @@ classifiers = [
 # and never ships a binary to anyone. Under a permissive licence that operator
 # owes the project nothing, which is the one case the AGPL was written for.
 # Running it privately, scanning your own estate, or wiring it into your CI
-# costs you nothing extra — the obligation only attaches when you offer it to
+# costs you nothing extra: the obligation only attaches when you offer it to
 # others over a network.
 license = "AGPL-3.0-only"
 license-files = ["LICENSE"]
 # Upper bounds are not caution, they are a correctness requirement here. This
 # engine publishes configuration digests and signs in-toto statements so that
 # two scans can be shown to be the same analysis. An unbounded `>=` means the
-# next major of Playwright — a different Chromium, with different defaults for
-# storage, referrer and third-party cookies — silently becomes the thing that
+# next major of Playwright (a different Chromium, with different defaults for
+# storage, referrer and third-party cookies) silently becomes the thing that
 # produced the evidence the signature attests to. Pair this with the lockfile
 # in requirements.lock, which pins the exact resolution.
 dependencies = [
