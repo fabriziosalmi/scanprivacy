@@ -6,7 +6,7 @@ timings, cookies, storage, headers, certificate, documents with their digests,
 and the reproduction instructions. A reader must be able to check every claim
 without asking us for anything.
 
-The template contains no prose of its own — every string comes from the locale
+The template contains no prose of its own: every string comes from the locale
 catalogue through `t`, so the same template renders any language.
 """
 
@@ -67,7 +67,7 @@ def _cookie_rows(observation: dict[str, Any], graph: dict[str, Any], t: Translat
         rows.append(
             {
                 **cookie,
-                "class_display": t.label(data_class, "DataClass") if data_class else "—",
+                "class_display": t.label(data_class, "DataClass") if data_class else "-",
                 "lifetime": t.t(
                     "report.labels.session" if cookie.get("session") else "report.labels.persistent"
                 ),
@@ -85,7 +85,7 @@ def _storage_rows(observation: dict[str, Any], graph: dict[str, Any], t: Transla
     rows = []
     for entry in (observation.get("browser") or {}).get("storage") or []:
         data_class = classes.get(entry.get("key"))
-        rows.append({**entry, "class_display": t.label(data_class, "DataClass") if data_class else "—"})
+        rows.append({**entry, "class_display": t.label(data_class, "DataClass") if data_class else "-"})
     return rows
 
 
@@ -181,12 +181,16 @@ def build_context(result: ScanResult, locale: str = DEFAULT_LOCALE) -> dict[str,
     requests = browser.get("requests") or []
     read, attempted = _documents(observation, t)
     record = data.get("record") or {}
+    probe_failures = sorted(
+        {f for page in (observation.get("pages") or []) for f in (page.get("probe_failures") or [])}
+    )
 
     return {
         "t": t,
         "scan": scan,
         "raw": data,
         "record": record,
+        "probe_failures": probe_failures,
         # Resolved here rather than in the template: Jinja was deriving the
         # label from the key, which is an English word in every language.
         "posture_rows": scan_posture_rows(record, t),

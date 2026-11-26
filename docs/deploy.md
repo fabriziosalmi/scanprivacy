@@ -2,7 +2,7 @@
 
 ```bash
 docker build -t scanprivacy \
-  --build-arg REVISION="$(git rev-parse HEAD)" --build-arg VERSION=0.1.0 .
+  --build-arg REVISION="$(git rev-parse HEAD)" --build-arg VERSION=0.1.4 .
 docker run --rm -e SCANPRIVACY_API_KEY="$(python -c 'import secrets;print(secrets.token_urlsafe(32))')" \
   -e SCANPRIVACY_CONTACT=you@example.org -p 127.0.0.1:8099:8099 \
   -v scanprivacy-data:/data scanprivacy

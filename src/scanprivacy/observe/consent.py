@@ -104,7 +104,7 @@ class RefusalAttempt:
     documentation: str | None = None
     note: str = ""
     verification: str = ""
-    """How well the path used is known to work — carried through to the report,
+    """How well the path used is known to work: carried through to the report,
     because a refusal made through an unproven path cannot support a finding
     stated as a fact."""
     detail: str = ""

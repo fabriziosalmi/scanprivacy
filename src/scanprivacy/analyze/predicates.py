@@ -1,4 +1,4 @@
-"""The predicate vocabulary — the closed DSL rules are written in.
+"""The predicate vocabulary: the closed DSL rules are written in.
 
 Two constraints, both deliberate and both inherited from privacy-pa:
 
@@ -62,7 +62,7 @@ def _via_embed(ctx: Context, s: Subject, arg: Any) -> bool:
     Every rule below that says the *site* did something takes
     `vendor_via_embed: false`, because a site answers for the embed it chose and
     not for what that embed loads internally. The vendor stays in the inventory
-    — the visitor's data did reach it, and the Art. 30 record should say so —
+   : the visitor's data did reach it, and the Art. 30 record should say so:
     attributed to the embed rather than to a decision the operator never made.
     """
     fact: VendorFact = s.payload
@@ -143,7 +143,7 @@ def _cookie_attribute_missing(ctx: Context, s: Subject, arg: Any) -> bool:
     if attribute == "samesite":
         # Chromium reports "Lax" both when the attribute is set and when it is
         # merely defaulted, so absence is not observable. Only an explicit
-        # SameSite=None is a fact we can state — see cookie_samesite_none.
+        # SameSite=None is a fact we can state: see cookie_samesite_none.
         return fact.cookie.same_site in (None, "")
     return False
 
@@ -296,7 +296,7 @@ def _dpia_criteria_min(ctx: Context, s: Subject, arg: Any) -> bool:
     """How many WP248 criteria the *observable* surface meets.
 
     Counts only what was seen. Scale, vulnerable subjects, special categories
-    and legal effects are invisible from outside and are never counted — the
+    and legal effects are invisible from outside and are never counted: the
     screening reports them as unanswered instead of assuming they are absent.
     """
     from .dpia import screen
@@ -363,8 +363,8 @@ def _present_before(ctx: Context, s: Subject, arg: Any) -> bool:
 def evaluate_condition(ctx: Context, subject: Subject, condition: dict[str, Any]) -> bool:
     """AND across every key. Unknown predicate or raised exception: no fire.
 
-    Not firing is the right answer in both cases — a rule the engine cannot
-    evaluate must not assert anything — but it is not the *whole* answer. A
+    Not firing is the right answer in both cases: a rule the engine cannot
+    evaluate must not assert anything: but it is not the *whole* answer. A
     predicate that throws is a defect in this engine, and if it goes unrecorded
     the only visible consequence is a finding that quietly stops appearing.
     That is the failure mode this project keeps meeting: something breaks and
@@ -378,7 +378,7 @@ def evaluate_condition(ctx: Context, subject: Subject, condition: dict[str, Any]
         fn = REGISTRY.get(name)
         if fn is None:
             logger.warning(
-                "unknown predicate %r on subject %s — rule does not fire", name, subject.slug or subject.kind
+                "unknown predicate %r on subject %s: rule does not fire", name, subject.slug or subject.kind
             )
             ctx.rule_errors.append(f"{name}: unknown predicate")
             return False
@@ -387,7 +387,7 @@ def evaluate_condition(ctx: Context, subject: Subject, condition: dict[str, Any]
                 return False
         except Exception as exc:
             logger.exception(
-                "predicate %r raised on subject %s — rule does not fire", name, subject.slug or subject.kind
+                "predicate %r raised on subject %s: rule does not fire", name, subject.slug or subject.kind
             )
             ctx.rule_errors.append(f"{name}: {type(exc).__name__}")
             return False

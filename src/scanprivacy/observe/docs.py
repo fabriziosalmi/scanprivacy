@@ -3,7 +3,7 @@
 This is where the engine stops being a tracker scanner and becomes a
 conformance engine: it compares what the site *declares* with what the site
 *does*. The gap between the two is the finding a data protection authority
-actually acts on, and it is fully deterministic — no judgement needed to see
+actually acts on, and it is fully deterministic: no judgement needed to see
 that a notice never names the processor whose script the page just loaded.
 """
 
@@ -43,7 +43,7 @@ ART13_ELEMENTS: dict[str, re.Pattern[str]] = {
     # Art. 13(1)(a), the controller's contact details.
     #
     # `cf-protected-email` is the marker `_to_text` leaves where Cloudflare had
-    # obfuscated an address — see the note there. Matching on the extracted text
+    # obfuscated an address: see the note there. Matching on the extracted text
     # rather than the markup keeps every element reading the same source: a
     # pattern allowed to see attributes could be satisfied by a `<meta>` tag no
     # reader ever sees.
@@ -59,8 +59,8 @@ ART13_ELEMENTS: dict[str, re.Pattern[str]] = {
     ),
     # Art. 13(1)(c). The element is the *why*, and the wording that carries it is
     # very often impersonal: "What data is processed, and why", "Quali dati sono
-    # trattati e perché". The pattern only recognised the first person — "why we
-    # process", "perché li trattiamo" — and reported the element missing on a
+    # trattati e perché". The pattern only recognised the first person ("why we
+    # process", "perché li trattiamo") and reported the element missing on a
     # notice that stated it plainly, across 35 sites of one estate, because they
     # all link the same page.
     #
@@ -111,7 +111,7 @@ ART13_ELEMENTS: dict[str, re.Pattern[str]] = {
     # Art. 13(2)(a). Two wordings defeated this and both are ordinary.
     #
     # "Conserviamo i dati per il tempo necessario" did not match
-    # `conserv(?:iamo|ati)\s+per` — two words in between were enough. And
+    # `conserv(?:iamo|ati)\s+per`: two words in between were enough. And
     # "Non conserviamo questi dati" / "We do not store this data" is a complete
     # answer to the article, the period being none; the pattern only knew the
     # affirmative form, so a notice that answered the question by saying nothing
@@ -244,21 +244,21 @@ class DocumentEvidence:
     ok: bool
     text_len: int = 0
     error: str | None = None
-    """Free text, and only ever a diagnostic — an exception's own words. Never
+    """Free text, and only ever a diagnostic: an exception's own words. Never
     a sentence for a reader: see error_key."""
     error_key: str | None = None
     error_params: dict[str, Any] = field(default_factory=dict)
     """Why this document could not be used, as a catalogue key.
 
     These strings reach the report. Written inline they were Italian, in an
-    engine whose entire premise is that findings carry no sentences — so an
+    engine whose entire premise is that findings carry no sentences: so an
     English report could tell its reader "nessuna risposta dal server". A key
     renders in whatever language the report is asked for, which is what every
     other string in this package already does."""
     discovery: str = ""  # how this URL was chosen, for auditability
     elements: dict[str, bool] = field(default_factory=dict)
     element_snippets: dict[str, str] = field(default_factory=dict)
-    """For each element found, the passage that satisfied it — so the reader
+    """For each element found, the passage that satisfied it: so the reader
     can check the engine read the document the way they would."""
     cookie_elements: dict[str, bool] = field(default_factory=dict)
     declared_vendors: list[str] = field(default_factory=list)  # vendor ids named in the text
@@ -275,7 +275,7 @@ class DocumentEvidence:
 # Cloudflare's email obfuscation. The address is in the markup, hex-encoded in
 # an attribute, and a script swaps it in on load. Stripping tags therefore threw
 # away the one thing Art. 13(1)(a) asks for, and a notice served through
-# Cloudflare — which is a great many of them — read as a notice with no contact
+# Cloudflare (which is a great many of them) read as a notice with no contact
 # address, on a page where the reader plainly sees one.
 #
 # Substituted with a marker rather than decoded. The encoding exists to keep
@@ -300,7 +300,7 @@ def _to_text(html_source: str) -> str:
     return _WS_RE.sub(" ", txt).strip()
 
 
-# A vendor named inside a denial is not a declared recipient — it is the
+# A vendor named inside a denial is not a declared recipient: it is the
 # opposite. "no advertising, no Google Ads" must not count as disclosure.
 _NEGATION = re.compile(
     r"\b(no|non|nessun[ao]?|senza|niente|né|nè|neither|nor|without|we\s+do\s+not|"

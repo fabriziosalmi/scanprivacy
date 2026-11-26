@@ -1,7 +1,7 @@
 """How to reproduce a finding without this tool.
 
 The point of a conformance report is not to be believed. Every finding carries
-the steps a sceptic — the site owner, their supplier, an authority — can follow
+the steps a sceptic (the site owner, their supplier, an authority) can follow
 with a browser and a terminal to see the same thing, or to prove us wrong. A
 finding nobody can check independently is worth nothing, and the first thing a
 supplier says is "your scanner is wrong".

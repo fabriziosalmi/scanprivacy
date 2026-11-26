@@ -102,7 +102,7 @@ FOOT = """
 
 _LINK = re.compile(r'href="([^"#:]+?)(\.md)?(#[^"]*)?"')
 _TABLE = re.compile(r"<table>.*?</table>", re.S)
-_EMOJI_LEAD = re.compile(r"^(#{1,6})[ \t]+[^\w\s#`*\[(<\"'-]+️?[ \t]+", re.M)
+_EMOJI_LEAD = re.compile(r"^(#{1,6})[ \t]+[^\w\s#`*\[(<\"'-]+\ufe0f?[ \t]+", re.M)
 
 
 # ------------------------------------------------------------------ facts

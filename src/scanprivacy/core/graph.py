@@ -2,7 +2,7 @@
 
 Node and edge types are a closed vocabulary on purpose: a consumer can rely on
 them, and a new rule cannot silently invent a semantic relation. Labels here
-are neutral — proper nouns, hosts, identifiers — never translated prose. A
+are neutral (proper nouns, hosts, identifiers) never translated prose. A
 renderer that wants human labels joins the graph with the findings it already
 has in hand.
 """

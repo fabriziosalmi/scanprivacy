@@ -4,7 +4,7 @@
 # look for a button whose text resembles "Reject", it does not click the second
 # button in a banner, it does not try three things until one works. It calls the
 # refusal method the platform's own vendor documents, on a platform it has
-# positively identified — or it does nothing and says so in the report.
+# positively identified: or it does nothing and says so in the report.
 #
 # Clicking blindly on somebody else's site is how a scanner unsubscribes a
 # mailing list, empties a cart or logs someone out. "Unlikely" is not a standard.
@@ -14,22 +14,22 @@
 #   name           shown in the report
 #   detect         JavaScript expression, must return truthy when the platform
 #                  is loaded AND ready to take the call
-#   method         api — call the documented function
-#                  dom — click a selector the vendor publishes
+#   method         api: call the documented function
+#                  dom: click a selector the vendor publishes
 #   expression     exactly what gets evaluated (api), verbatim in the report
 #   selector       exactly what gets clicked (dom); must match one visible
 #                  element, or the engine refuses to act
-#   documentation  where the vendor documents it — cited in the report, so a
+#   documentation  where the vendor documents it: cited in the report, so a
 #                  reader can check we used the supported path
 #   note           anything a reader should know about what the call means
-#   verification   field_verified — this exact path has been exercised against a
+#   verification   field_verified: this exact path has been exercised against a
 #                    real installation and observed to do what the vendor says
-#                  documented — transcribed from the vendor's documentation and
+#                  documented: transcribed from the vendor's documentation and
 #                    never run against a live site
 #
 # THE SECOND RULE: the difference above reaches the reader. A refusal performed
 # through a merely documented path may have called a function that exists,
-# returns cleanly, and does nothing — the engine cannot tell from outside. A
+# returns cleanly, and does nothing: the engine cannot tell from outside. A
 # finding built on it ("this service kept running after the visitor refused")
 # is then an accusation resting on an unproven premise, and it is stated as an
 # indication rather than as a fact. iubenda is why: its production build did

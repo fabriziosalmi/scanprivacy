@@ -5,10 +5,8 @@
       <h1 id="top">What a website does before the visitor says yes.</h1>
       <p class="lede">scanprivacy loads a page the way a first-time visitor would and records every request, cookie and storage write. It reports what it saw against GDPR, ePrivacy and the AI Act, and every finding carries the evidence behind it. It never clicks, logs in or accepts anything.</p>
       <div class="install">
-<pre data-copy><code>git clone https://github.com/fabriziosalmi/scanprivacy
-cd scanprivacy
-pip install -e .
-python -m playwright install chromium
+<pre data-copy><code>pipx install scanprivacy
+scanprivacy install-browser
 scanprivacy scan https://example.org --pdf report.pdf --json evidence.json</code></pre>
       </div>
       <p class="actions">
@@ -88,7 +86,7 @@ knowledge unchanged: yes</code></pre>
     <h2 id="limits">Limits, stated</h2>
     <div>
       <ul class="plain-list">
-        <li>It observes once, from one place. A single visit is a photograph: two loads of the same page can differ, and <code>diff</code> shows that variance instead of hiding it.</li>
+        <li>It observes once by default, from one place. A single visit is a photograph: two loads of the same page can differ, so <code>--repeat N</code> measures stability across loads and <code>diff</code> shows variance instead of hiding it.</li>
         <li>The default pass expresses no consent, so what a site does after acceptance is not verified. The refusal pass covers refusal only, for the consent platforms it knows.</li>
         <li>A scan covers one deployment. Sibling hosts the entry page links to are listed in the page plan and not followed.</li>
         <li>Text-based checks, such as the Art. 13 elements of a privacy notice, can miss an unusual wording, which is why those findings carry lower confidence.</li>
@@ -115,6 +113,7 @@ knowledge unchanged: yes</code></pre>
 <pre data-copy><code>docker build -t scanprivacy .
 docker run --rm \
   -e SCANPRIVACY_API_KEY="$(python -c 'import secrets;print(secrets.token_urlsafe(32))')" \
+  -e SCANPRIVACY_CONTACT=you@example.org \
   -p 127.0.0.1:8099:8099 -v scanprivacy-data:/data scanprivacy</code></pre>
         <p>It refuses to listen beyond loopback without an API key, because every request it makes reaches third parties in your name. Read <a href="/docs/deploy.html">Deployment</a> before exposing it.</p>
       </div>

@@ -3,7 +3,7 @@
 Two work products, both deliberately incomplete, and honest about it.
 
 **DPIA screening.** The EDPB (WP248 rev.01) lists nine criteria; two or more met
-usually means an assessment is due. Some of them are visible from outside — a
+usually means an assessment is due. Some of them are visible from outside: a
 profiling vendor, a session recorder, systematic monitoring across pages, an AI
 component. Others are not visible from any distance: scale, vulnerable subjects,
 special categories, legal effects. This module reports the ones it observed
@@ -14,7 +14,7 @@ never covered the question.
 
 **Transfer prompts.** For every recipient outside the EEA, the questions a
 transfer impact assessment has to answer, pre-filled with what was observed:
-who, where, what data, on what basis, and — where the knowledge base has one —
+who, where, what data, on what basis, and: where the knowledge base has one:
 whether an equivalent exists that would remove the transfer instead of
 documenting it. The cheapest transfer impact assessment is the transfer you do
 not make.
@@ -29,7 +29,7 @@ from ..core.enums import DataType, TransferScope, VendorCategory
 from .context import Context
 
 # WP248 rev.01, in the order the guidelines list them. `observable` says whether
-# this engine can see the criterion from outside at all — the honest half of the
+# this engine can see the criterion from outside at all: the honest half of the
 # screening lives in that flag.
 CRITERIA: tuple[tuple[str, bool], ...] = (
     ("evaluation_scoring", True),

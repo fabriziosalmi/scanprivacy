@@ -80,7 +80,7 @@ outputs:
     description: A, B, C, D, F or INCONCLUSIVE.
     value: ${{ steps.scan.outputs.grade }}
   conformant:
-    description: 'true or false — no critical and no high finding.'
+    description: 'true or false: no critical and no high finding.'
     value: ${{ steps.scan.outputs.conformant }}
   findings:
     description: Total number of findings.
@@ -177,7 +177,7 @@ runs:
         )
         quick = sum(1 for f in result.get("findings", []) if f.get("quick_win"))
         with open(summary_path, "a", encoding="utf-8") as fh:
-            fh.write(f"## scanprivacy — {result.get('final_url')}\n\n")
+            fh.write(f"## scanprivacy: {result.get('final_url')}\n\n")
             fh.write(f"**{verdict.get('grade')}** · {len(result.get('findings', []))} findings · ")
             fh.write(f"{quick} low-effort fixes on serious findings · {anchored} anchored to source\n\n")
             fh.write("| severity | findings |\n|---|---:|\n" + rows + "\n")

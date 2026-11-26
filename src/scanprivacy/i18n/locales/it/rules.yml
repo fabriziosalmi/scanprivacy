@@ -1,4 +1,4 @@
-# Testi delle regole — italiano.
+# Testi delle regole: italiano.
 #
 # I segnaposto arrivano dal soggetto su cui la regola è scattata:
 #   vendor   {vendor} {product} {category} {jurisdiction} {hosts} {transfer} {data_types}
@@ -40,7 +40,7 @@ PM-DIS-01:
   remediation:
     summary: >
       Allineare informativa e comportamento: o si rimuove {product}, oppure lo si
-      dichiara con nome, finalità e — se del caso — trasferimento.
+      dichiara con nome, finalità e (se del caso) trasferimento.
     steps:
       - >
         Decidere se {product} è necessario: se non lo è, rimuoverlo è la
@@ -57,8 +57,8 @@ PM-CNS-01:
   title_generic: "Servizio che richiede consenso caricato prima di qualunque consenso"
   title: "{product} viene caricato prima di qualunque consenso"
   description: >
-    {product} ({vendor}) accede al terminale dell'utente — vi scrive o vi legge
-    identificatori — e viene caricato alla semplice apertura della pagina. Per
+    {product} ({vendor}) accede al terminale dell'utente (vi scrive o vi legge
+    identificatori) e viene caricato alla semplice apertura della pagina. Per
     strumenti di questo tipo il consenso deve essere raccolto **prima**
     dell'installazione: qui il trattamento è già avvenuto quando l'utente vede la
     pagina, quindi un eventuale banner interviene comunque troppo tardi.
@@ -93,8 +93,8 @@ PM-CNS-02:
 PM-CNS-03:
   title: Meccanismo di consenso presente, ma il tracciamento parte prima della scelta
   description: >
-    La pagina espone un meccanismo di consenso, ma alla prima visita — senza che
-    l'utente abbia accettato nulla — sono già presenti sul terminale cookie o
+    La pagina espone un meccanismo di consenso, ma alla prima visita (senza che
+    l'utente abbia accettato nulla) sono già presenti sul terminale cookie o
     chiavi di memoria riconducibili a tracciamento. Il blocco preventivo non è
     attivo: la piattaforma documenta una scelta che di fatto non condiziona il
     comportamento del sito. È l'ipotesi più esposta, perché prova che l'obbligo è
@@ -292,7 +292,7 @@ PM-SEC-03:
     Non è dichiarata alcuna Content-Security-Policy. Oltre al profilo di
     sicurezza, la CSP è lo strumento che rende *verificabile* la promessa
     contenuta nell'informativa: senza `connect-src` e `script-src` espliciti,
-    qualunque script incluso — anche introdotto per errore o da un fornitore — può
+    qualunque script incluso (anche introdotto per errore o da un fornitore) può
     aprire un canale verso terzi non dichiarati.
   remediation:
     summary: Adottare una CSP che elenchi esplicitamente le destinazioni ammesse.
@@ -367,7 +367,7 @@ PM-REJ-01:
     contattato ugualmente da {hosts}. Il rifiuto è stato registrato e ignorato:
     il meccanismo produce la registrazione di una scelta che non governa il
     comportamento del sito. È l'ipotesi più esposta che esista, perché l'obbligo
-    è dimostrabilmente conosciuto — il sito ha costruito un modo per rifiutare —
+    è dimostrabilmente conosciuto: il sito ha costruito un modo per rifiutare:
     e il rifiuto non produce effetti.
 
 PM-REJ-02:
@@ -380,7 +380,7 @@ PM-REJ-02:
   remediation:
     summary: Fare in modo che il rifiuto blocchi davvero ciò che imposta «{name}».
     steps:
-      - "Riprodurlo: rifiutare, ricaricare e leggere i cookie — i passi esatti sono nella sezione evidenza."
+      - "Riprodurlo: rifiutare, ricaricare e leggere i cookie: i passi esatti sono nella sezione evidenza."
       - >
         Individuare perché il rifiuto non raggiunge quello script: un tag incluso
         fuori dal controllo della piattaforma di consenso, un tag manager
@@ -466,7 +466,7 @@ PM-IAM-03:
   description: >
     La pagina {action} contiene un campo password ed è stata consegnata in HTTP
     non cifrato. Tutto ciò che vi viene digitato viaggia in chiaro, e la pagina
-    stessa può essere modificata in transito — inclusa la destinazione del modulo.
+    stessa può essere modificata in transito: inclusa la destinazione del modulo.
   remediation:
     summary: Servire la pagina in HTTPS e imporlo.
     steps:
@@ -514,8 +514,8 @@ PM-DPIA-01:
     rischio elevato; due o più soddisfatti significano di norma che è dovuta una
     valutazione ex art. 35. Sulla superficie che questa scansione può vedere,
     risultano soddisfatti i criteri elencati nell'evidenza. Questo è uno
-    **screening, non una determinazione**: quattro dei nove criteri — scala,
-    interessati vulnerabili, categorie particolari di dati ed effetti giuridici —
+    **screening, non una determinazione**: quattro dei nove criteri: scala,
+    interessati vulnerabili, categorie particolari di dati ed effetti giuridici:
     non sono osservabili dall'esterno e nell'evidenza sono indicati come senza
     risposta. Una conclusione in un senso o nell'altro richiede che a quelli
     risponda chi conosce il trattamento.

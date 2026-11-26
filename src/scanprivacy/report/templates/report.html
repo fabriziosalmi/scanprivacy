@@ -51,7 +51,7 @@
       <tr><th>{{ t.t('consent_pass.labels.markers') }}</th><td>{{ scan.refusal.detected_markers|join(", ") }}</td></tr>
       {% endif %}
       {% if scan.refusal.detail %}
-      <tr><th>—</th><td class="piccolo">{{ scan.refusal.detail }}</td></tr>
+      <tr><th>-</th><td class="piccolo">{{ scan.refusal.detail }}</td></tr>
       {% endif %}
     </tbody>
   </table>
@@ -92,7 +92,7 @@
 
   <table>
     <tbody>
-      <tr><th style="width:34%">{{ t.t('report.labels.page_title') }}</th><td>{{ scan.site.title or "—" }}</td></tr>
+      <tr><th style="width:34%">{{ t.t('report.labels.page_title') }}</th><td>{{ scan.site.title or "-" }}</td></tr>
       <tr><th>{{ t.t('report.labels.platform') }}</th><td>{{ scan.site.platform or t.t('report.labels.not_detected') }}</td></tr>
       {% if scan.mode == 'refusal_pass' %}
       <tr><th>{{ t.t('consent_pass.labels.third_parties_after') }}</th><td>{{ scan.site.third_parties }}</td></tr>
@@ -105,8 +105,12 @@
       {% endif %}
       <tr><th>{{ t.t('report.labels.consent_mechanism') }}</th><td>{{ scan.site.cmp|join(", ") if scan.site.cmp else t.t('report.labels.none_detected') }}</td></tr>
       <tr><th>{{ t.t('report.labels.documents_read') }}</th><td>{{ scan.site.documents_read|join(", ") if scan.site.documents_read else t.t('report.labels.none') }}</td></tr>
+      {% if record and record.evidence_digest %}
       <tr><th>{{ t.t('report.labels.evidence_digest') }}</th><td class="impronta">{{ record.evidence_digest.sha256 }}</td></tr>
+      {% endif %}
+      {% if record and record.digests %}
       <tr><th>{{ t.t('report.labels.ruleset_digest') }}</th><td class="impronta">{{ record.digests.ruleset }}</td></tr>
+      {% endif %}
     </tbody>
   </table>
 </section>
@@ -283,7 +287,7 @@
       <td>
         {% if criterion.met %}<span class="no">{{ t.t('dpia.met') }}</span>
         {% elif not criterion.observable %}<span class="piccolo">{{ t.t('dpia.not_assessable') }}</span>
-        {% else %}—{% endif %}
+        {% else %}-{% endif %}
       </td>
       <td class="piccolo">{{ criterion.evidence|join(", ") }}</td>
     </tr>
@@ -316,10 +320,10 @@
     <tr>
       <td>{{ entry.product }}{% if entry.vendor %}<br><span class="piccolo">{{ entry.vendor }}</span>{% endif %}</td>
       <td>{{ entry.jurisdiction }}</td>
-      <td class="piccolo">{{ entry.basis_display or "—" }}</td>
+      <td class="piccolo">{{ entry.basis_display or "-" }}</td>
       <td class="piccolo">{{ entry.data_display|join(", ") }}</td>
       <td class="{{ 'si' if entry.declared else 'no' }}">{{ t.t('report.labels.yes') if entry.declared else t.t('report.labels.no') }}</td>
-      <td class="piccolo">{{ entry.alternative_display|join(", ") or "—" }}</td>
+      <td class="piccolo">{{ entry.alternative_display|join(", ") or "-" }}</td>
     </tr>
   {% endfor %}
   </tbody>
@@ -349,7 +353,7 @@
       <td class="num">{{ loop.index }}</td>
       <td class="mono">{{ page.url }}<br><span class="piccolo">{{ page.why }}</span></td>
       <td>{{ page.kind }}</td>
-      <td class="num">{{ page.status or "—" }}</td>
+      <td class="num">{{ page.status or "-" }}</td>
       <td class="num">{{ page.requests }}</td>
       <td class="num">{{ page.cookies }}</td>
     </tr>
@@ -376,10 +380,10 @@
   <tbody>
   {% for q in requests %}
     <tr>
-      <td class="num">{{ q.t_ms if q.t_ms is not none else "—" }}</td>
+      <td class="num">{{ q.t_ms if q.t_ms is not none else "-" }}</td>
       <td class="mono">{{ q.host }}</td>
       <td>{{ q.resource_type }}</td>
-      <td class="num">{{ q.status or "—" }}</td>
+      <td class="num">{{ q.status or "-" }}</td>
       <td class="mono">{{ q.path if q.path|length <= 72 else q.path[:72] ~ "…" }}</td>
     </tr>
   {% endfor %}
@@ -406,9 +410,9 @@
   {% for c in cookies %}
     <tr>
       <td class="mono">{{ c.name }}</td><td class="mono">{{ c.domain }}</td><td>{{ c.class_display }}</td>
-      <td>{{ t.t('report.labels.yes') if c.secure else "—" }}</td>
-      <td>{{ t.t('report.labels.yes') if c.http_only else "—" }}</td>
-      <td>{{ c.same_site or "—" }}</td><td>{{ c.lifetime }}</td>
+      <td>{{ t.t('report.labels.yes') if c.secure else "-" }}</td>
+      <td>{{ t.t('report.labels.yes') if c.http_only else "-" }}</td>
+      <td>{{ c.same_site or "-" }}</td><td>{{ c.lifetime }}</td>
     </tr>
   {% endfor %}
   {% if not cookies %}<tr><td colspan="7">{{ t.t('report.legend.no_cookies') }}</td></tr>{% endif %}
@@ -447,10 +451,10 @@
 <h3>{{ t.t('report.headings.tls') }}</h3>
 <table>
   <tbody>
-    <tr><th style="width:26%">{{ t.t('report.labels.issuer') }}</th><td>{{ tls.issuer_org or "—" }}{% if tls.issuer_cn %} — {{ tls.issuer_cn }}{% endif %}</td></tr>
+    <tr><th style="width:26%">{{ t.t('report.labels.issuer') }}</th><td>{{ tls.issuer_org or "-" }}{% if tls.issuer_cn %} ({{ tls.issuer_cn }}){% endif %}</td></tr>
     <tr><th>{{ t.t('report.labels.classification') }}</th><td>{{ tls.classification }}</td></tr>
-    <tr><th>{{ t.t('report.labels.valid_from') }}</th><td>{{ tls.not_before or "—" }}</td></tr>
-    <tr><th>{{ t.t('report.labels.valid_until') }}</th><td>{{ tls.not_after or "—" }}{% if tls.days_to_expiry is not none %} ({{ t.t('report.labels.days', n=tls.days_to_expiry) }}){% endif %}</td></tr>
+    <tr><th>{{ t.t('report.labels.valid_from') }}</th><td>{{ tls.not_before or "-" }}</td></tr>
+    <tr><th>{{ t.t('report.labels.valid_until') }}</th><td>{{ tls.not_after or "-" }}{% if tls.days_to_expiry is not none %} ({{ t.t('report.labels.days', n=tls.days_to_expiry) }}){% endif %}</td></tr>
     <tr><th>{{ t.t('report.labels.protocol') }}</th><td>{{ tls.protocol }}</td></tr>
     <tr><th>{{ t.t('report.labels.fingerprint') }}</th><td class="impronta">{{ tls.sha256 }}</td></tr>
   </tbody>
@@ -514,12 +518,13 @@
 {% endif %}
 
 {# --------------------------------------------------------- reproducibility #}
+{% if record %}
 <h2 class="pagina-nuova">{{ t.t('report.headings.reproducibility') }}</h2>
 <p>{{ t.t('report.legend.reproducibility') }}</p>
 
 <table>
   <tbody>
-    {% for k, v in record.engine.items() %}
+    {% for k, v in (record.engine or {}).items() %}
     <tr><th style="width:30%">{{ t.t('record.engine.' ~ k) }}</th><td>{{ v }}</td></tr>
     {% endfor %}
   </tbody>
@@ -527,17 +532,19 @@
 
 <table>
   <tbody>
-    <tr><th style="width:30%">{{ t.t('report.labels.ruleset_digest') }}</th><td class="impronta">{{ record.digests.ruleset }}</td></tr>
-    <tr><th>{{ t.t('report.labels.knowledge_digest') }}</th><td class="impronta">{{ record.digests.knowledge }}</td></tr>
-    <tr><th>{{ t.t('report.labels.evidence_digest') }}</th><td class="impronta">{{ record.evidence_digest.sha256 }}</td></tr>
+    <tr><th style="width:30%">{{ t.t('report.labels.ruleset_digest') }}</th><td class="impronta">{{ (record.digests or {}).get('ruleset', '-') }}</td></tr>
+    <tr><th>{{ t.t('report.labels.knowledge_digest') }}</th><td class="impronta">{{ (record.digests or {}).get('knowledge', '-') }}</td></tr>
+    <tr><th>{{ t.t('report.labels.evidence_digest') }}</th><td class="impronta">{{ (record.evidence_digest or {}).get('sha256', '-') }}</td></tr>
+    {% if (record.evidence_digest or {}).get('computed_on_key') %}
     <tr><th>{{ t.t('report.labels.computed_on') }}</th><td class="piccolo">{{ t.t(record.evidence_digest.computed_on_key) }}</td></tr>
+    {% endif %}
   </tbody>
 </table>
 
 <h3>{{ t.t('report.headings.parameters') }}</h3>
 <table>
   <tbody>
-    {% for k, v in record.parameters.items() %}
+    {% for k, v in (record.parameters or {}).items() %}
     <tr><th style="width:38%">{{ t.t('record.parameters.' ~ k) }}</th><td class="mono">{{ v }}</td></tr>
     {% endfor %}
   </tbody>
@@ -553,11 +560,12 @@
 <table>
   <thead><tr><th style="width:46%">{{ t.t('report.labels.file') }}</th><th>{{ t.t('report.labels.digest') }}</th></tr></thead>
   <tbody>
-  {% for name, digest in record.digests.rules.items() %}
+  {% for name, digest in ((record.digests or {}).get('rules') or {}).items() %}
     <tr><td class="mono">{{ name }}</td><td class="impronta">{{ digest }}</td></tr>
   {% endfor %}
   </tbody>
 </table>
+{% endif %}
 
 {# ---------------------------------------------------------------- method #}
 <h2>{{ t.t('report.headings.method') }}</h2>
@@ -574,6 +582,9 @@
 
 <div class="nota">
   <p><strong>{{ t.t('report.limits.title') }}</strong> {{ t.t('report.limits.body') }}</p>
+  {% if probe_failures %}
+  <p>{{ t.t('report.limits.partial', probes=probe_failures|join(", ")) }}</p>
+  {% endif %}
   <p>{{ t.t('report.limits.disclaimer') }}</p>
 </div>
 

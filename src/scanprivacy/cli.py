@@ -66,7 +66,7 @@ def write_artefacts(result, args: argparse.Namespace) -> list[Path]:
 
         # The subjects are exactly the artefacts this run produced. Rebuilding
         # that list by hand is how a statement ends up covering a file the run
-        # never wrote, or missing one it did — so it comes from `written`.
+        # never wrote, or missing one it did: so it comes from `written`.
         statement, signature = write_attestation(
             result,
             list(written),
@@ -140,8 +140,8 @@ _GATE_ORDER = ("critical", "high", "medium", "low", "info")
 def _gate(result, fail_on: str) -> int:
     """Exit code in the AGSSH register: a failing gate is the default.
 
-    `--fail-on` lets a team adopt the gate progressively — block on critical
-    today, tighten later — without pretending the other findings are absent.
+    `--fail-on` lets a team adopt the gate progressively: block on critical
+    today, tighten later: without pretending the other findings are absent.
     """
     if result.verdict is None:
         return 1
@@ -178,11 +178,11 @@ def _cmd_batch(args: argparse.Namespace) -> int:
         if error == "cached":
             state = "cached"
         elif error:
-            state = f"FAILED — {error[:60]}"
+            state = f"FAILED: {error[:60]}"
         else:
             grade = result.verdict.grade.value if result and result.verdict else "?"
             state = f"{grade} · {len(result.findings) if result else 0} findings"
-        print(f"[{done['n']}/{len(targets)}] {url} — {state}", flush=True)
+        print(f"[{done['n']}/{len(targets)}] {url}: {state}", flush=True)
 
     results, summary = asyncio.run(
         run_batch(targets, out_dir, settings, concurrency=args.concurrency, on_result=progress)
@@ -364,7 +364,7 @@ def _cmd_verify(args: argparse.Namespace) -> int:
     repeat = verify_repeat(data)
     if repeat is not None:
         print(t.t("cli.verify_repeat", value=yes if all(repeat.values()) else no))
-    # False fails; None — a result published before the findings digest existed —
+    # False fails; None: a result published before the findings digest existed:
     # does not, because "could not be checked" is not "was checked and failed".
     return 0 if checked["evidence_intact"] and checked["findings_intact"] is not False and all((repeat or {}).values()) else 1
 
@@ -429,7 +429,7 @@ def _cmd_verify_attestation(args: argparse.Namespace) -> int:
     for name in checked.missing:
         print(f"  MISSING  {name}")
     if checked.signature_verified is None:
-        print(f"signature          : NOT VERIFIED — {checked.signature_detail}")
+        print(f"signature          : NOT VERIFIED: {checked.signature_detail}")
     else:
         signature = "verified" if checked.signature_verified else "INVALID"
         print(f"signature          : {signature} ({checked.signature_mode})")
@@ -538,8 +538,8 @@ def build_parser() -> argparse.ArgumentParser:
     """The command surface, separated from running it.
 
     Two reasons, and neither is tidiness. A parser that can be built without
-    executing anything can be *asserted on* — every default, every choice list,
-    every exit code — which is most of what a command line promises. And the
+    executing anything can be *asserted on*: every default, every choice list,
+    every exit code: which is most of what a command line promises. And the
     dispatch below stays four lines, so the thing that decides what runs is
     readable at a glance.
     """
@@ -548,7 +548,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     # Every report this tool writes names the engine version in its
     # reproducibility section, so the version has to be answerable from the
-    # command line too — otherwise someone holding a report cannot check which
+    # command line too: otherwise someone holding a report cannot check which
     # build produced it without reading the source.
     parser.add_argument(
         "--version",
@@ -715,7 +715,7 @@ def build_parser() -> argparse.ArgumentParser:
     verify_att.set_defaults(func=_cmd_verify_attestation)
 
     rem_cmd = sub.add_parser(
-        "remediation", help="the fix catalogue — by rule, pattern or vendor, without scanning"
+        "remediation", help="the fix catalogue: by rule, pattern or vendor, without scanning"
     )
     rem_cmd.add_argument("key", nargs="?", help="a rule id, a pattern name, or a vendor id")
     rem_cmd.add_argument("--json", action="store_true", help="machine-readable, for tools and agents")

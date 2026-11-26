@@ -5,7 +5,7 @@ report, it is a node attached to the evidence that produced it, to the legal
 provision it hangs from, and to the fix that closes it. Everything a client
 needs to answer "why do you say so?" and "what do I do?" is one hop away.
 
-Labels stay neutral — hosts, proper nouns, identifiers, reference keys. The
+Labels stay neutral: hosts, proper nouns, identifiers, reference keys. The
 renderer substitutes translated labels when it draws the diagram.
 """
 

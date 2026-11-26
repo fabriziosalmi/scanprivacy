@@ -206,7 +206,7 @@ class Translator:
         return self._lookup("rules", f"{rule_id}.{field_}") is not None
 
     def reference(self, key: str) -> str:
-        """A legal reference: `gdpr:13.1.f` -> "GDPR Art. 13(1)(f) — …"."""
+        """A legal reference: `gdpr:13.1.f` -> "GDPR Art. 13(1)(f): …"."""
         value = self._lookup("references", key)
         if value is None:
             # An unknown reference is shown as its key rather than hidden: a

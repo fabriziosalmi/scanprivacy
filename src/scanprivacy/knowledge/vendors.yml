@@ -1,10 +1,10 @@
-# Vendor knowledge base — FACTS ONLY.
+# Vendor knowledge base: FACTS ONLY.
 #
 # What a vendor is, where it processes, whether it touches the terminal. No
 # prose: remediation is a `pattern` resolved through the locale catalogues, data
 # categories are `DataType` keys, the transfer basis is a key. Aliases used to
 # find a vendor in a site's own privacy notice are per-language and live in
-# i18n/locales/<lang>/vendors.yml — a notice written in German names Google
+# i18n/locales/<lang>/vendors.yml: a notice written in German names Google
 # Fonts differently from one written in Italian.
 #
 # Adding a vendor is a data change. It never requires touching code, and after
@@ -15,10 +15,10 @@
 #   vendor/product  proper nouns, never translated
 #   category        VendorCategory
 #   jurisdiction    ISO country of the controlling entity
-#   transfer        TransferScope — eea | adequacy | non_eea
+#   transfer        TransferScope: eea | adequacy | non_eea
 #   transfer_basis  key: dpf | scc | dpf_scc | adequacy
 #   storage_access  reads or writes terminal storage (the Art. 5(3) trigger)
-#   consent_class   ConsentClass — required | technical | uncertain
+#   consent_class   ConsentClass: required | technical | uncertain
 #   data_types      DataType keys: what leaves the browser at minimum
 #   remediation     pattern + optional alternatives and vendor-specific steps
 defaults:
@@ -185,7 +185,7 @@ vendors:
   - .ytimg.com
   # Video delivery. Not a separate recipient: the hostnames are per-session
   # (rr1---sn-8vq54voxpu-bv5e.googlevideo.com), so listing them individually is
-  # impossible and reporting them as an unknown third party is misleading —
+  # impossible and reporting them as an unknown third party is misleading:
   # a visitor reaches them only because the YouTube player was loaded.
   - .googlevideo.com
   remediation:
@@ -1081,7 +1081,7 @@ vendors:
   storage_access: false
   consent_class: technical
   # GitHub Pages serves a fixed set of response headers and offers no way to add
-  # one — no config file, no dashboard, no header rules. Verified against
+  # one: no config file, no dashboard, no header rules. Verified against
   # hstspreload.org on 2026-07-29: `github.io` and `fabriziosalmi.github.io` are
   # both `unknown`, so the HSTS finding is *true* there and simultaneously
   # impossible to close on the platform. The report has to say both things.
@@ -1103,7 +1103,7 @@ vendors:
 # ------------------------------------------------------- identity providers
 # An identity provider receives who the user is, not merely that a visitor
 # arrived. The transfer and disclosure rules already reach them once they are
-# here — no new rule needed, only the facts.
+# here: no new rule needed, only the facts.
 - id: google-identity
   vendor: Google Ireland Ltd / Google LLC
   product: Sign in with Google

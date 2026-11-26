@@ -3,7 +3,7 @@
 The reproducibility record already lets a reader recompute every digest. It
 does not stop someone from editing the report *and* the digest together. An
 attestation closes that: the digests are bound into an in-toto statement, the
-statement is signed, and — with keyless signing — the signature is recorded in
+statement is signed, and (with keyless signing) the signature is recorded in
 a public transparency log. Altering an artefact afterwards is then detectable
 by anyone, without trusting whoever sent it.
 
@@ -144,8 +144,8 @@ def _run(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess:
 def sign_statement(statement_path: Path, mode: str, key: Path | None = None) -> Signature:
     """Sign with cosign. Keyless in CI, with a key elsewhere.
 
-    Keyless signing needs an OIDC identity — GitHub Actions provides one when
-    the job declares `id-token: write` — and publishes to Rekor, which is what
+    Keyless signing needs an OIDC identity (GitHub Actions provides one when
+    the job declares `id-token: write`) and publishes to Rekor, which is what
     makes the signature verifiable by a stranger.
     """
     if mode == SIGNATURE_NONE:
@@ -240,15 +240,23 @@ def verify_attestation(
     missing: list[str] = []
     matching = 0
     subjects = statement.get("subject", [])
+    base_resolved = base.resolve()
     for subject in subjects:
-        artifact = base / subject["name"]
+        name = str(subject.get("name", ""))
+        if not name or Path(name).name != name:
+            mismatched.append(name)
+            continue
+        artifact = (base / name).resolve()
+        if not artifact.is_relative_to(base_resolved):
+            mismatched.append(name)
+            continue
         if not artifact.is_file():
-            missing.append(subject["name"])
+            missing.append(name)
             continue
         if file_digest(artifact) == subject["digest"]["sha256"]:
             matching += 1
         else:
-            mismatched.append(subject["name"])
+            mismatched.append(name)
 
     bundle = statement_path.with_suffix(statement_path.suffix + ".sigbundle")
     signature_verified: bool | None = None
@@ -259,18 +267,24 @@ def verify_attestation(
         mode = SIGNATURE_KEY if public_key else SIGNATURE_KEYLESS
         if not cosign_available():
             detail = "signature present but cosign is not on PATH: not verified"
+        elif not public_key and (not certificate_identity or not certificate_oidc_issuer):
+            # keyless verification is only meaningful when both the expected
+            # identity and OIDC issuer are stated: anyone can sign anything with
+            # their own identity, so refusing to wildcard keeps the check fail-closed.
+            detail = (
+                "keyless verification requires both --identity and --oidc-issuer "
+                "(refusing wildcard match)"
+            )
         else:
             command = ["cosign", "verify-blob", "--bundle", str(bundle)]
             if public_key:
                 command += ["--key", str(public_key), "--insecure-ignore-tlog=true"]
             else:
-                # keyless verification is only meaningful when the expected
-                # identity is stated: anyone can sign anything with any identity
                 command += [
                     "--certificate-identity-regexp",
-                    certificate_identity or ".*",
+                    certificate_identity,
                     "--certificate-oidc-issuer-regexp",
-                    certificate_oidc_issuer or ".*",
+                    certificate_oidc_issuer,
                 ]
             command.append(str(statement_path))
             completed = _run(command)

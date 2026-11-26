@@ -173,7 +173,7 @@ async def _scan(
                 # Some WAFs reject an unusual UA outright. One retry with a plain
                 # browser string: we are a browser, we just say so differently.
                 # Opt-in, because the retry drops the contact address the site
-                # owner would need in order to object — and whether that trade is
+                # owner would need in order to object: and whether that trade is
                 # acceptable is the operator's call, not this function's.
                 await limiter.wait(urlsplit(url).netloc)
                 retried = await observe_url(browser, url, settings, user_agent=UA_FALLBACK)
@@ -199,8 +199,8 @@ async def _scan(
                     )
 
                 # Same organisation, different deployment. Not visiting them is
-                # the correction — findings from `api.example.org` reported under
-                # `www.example.org` send the reader to the wrong codebase — but
+                # the correction (findings from `api.example.org` reported under
+                # `www.example.org` send the reader to the wrong codebase) but
                 # a reader has to be told the surface exists, or the omission is
                 # invisible and looks like coverage.
                 for sibling in sibling_hosts(entry):
@@ -409,8 +409,8 @@ async def refusal_scan(
     # Fail-closed, applied to this pass's own question.
     #
     # A refusal pass asks one thing: what survives when the visitor says no. If
-    # no refusal happened — no mechanism found, the platform unrecognised, the
-    # control ambiguous, the documented call failed — that question has no
+    # no refusal happened (no mechanism found, the platform unrecognised, the
+    # control ambiguous, the documented call failed) that question has no
     # answer, and zero findings is what "we never asked" looks like. Grading it
     # A meant handing out a clean verdict for something never observed, in the
     # mode built to be the strictest thing this engine does.

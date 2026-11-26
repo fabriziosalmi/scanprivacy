@@ -21,20 +21,32 @@ PUBLIC = sorted(
         ROOT / "CONTRIBUTING.md",
         ROOT / "CODE_OF_CONDUCT.md",
         ROOT / "CHANGELOG.md",
+        ROOT / "action.yml",
+        ROOT / "pyproject.toml",
         ROOT / "data" / "baseline" / "README.md",
         ROOT / "src" / "scanprivacy" / "rules" / "README.md",
         ROOT / "site" / "index.html",
+        ROOT / "site" / "og.html",
+        ROOT / "site" / "build.py",
+        ROOT / "tools" / "art13" / "RUBRIC.md",
         *(ROOT / "docs").glob("*.md"),
+        *(ROOT / "examples" / "workflows").glob("*.yml"),
+        *(ROOT / ".github" / "workflows").glob("*.yml"),
+        *(ROOT / ".github" / "ISSUE_TEMPLATE").glob("*.yml"),
+        ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md",
+        ROOT / "src" / "scanprivacy" / "report" / "markdown.py",
+        ROOT / "src" / "scanprivacy" / "report" / "templates" / "report.html",
+        *(ROOT / "src" / "scanprivacy" / "i18n" / "locales").rglob("*.yml"),
     ]
 )
 
-EMOJI = re.compile("[\U0001f300-\U0001faff☀-➿️]")
+EMOJI = re.compile("[\U0001f300-\U0001faff\u2600-\u27bf\ufe0f]")
 
 
 @pytest.mark.parametrize("path", PUBLIC, ids=lambda p: str(p.relative_to(ROOT)))
 def test_no_em_dash_in_public_text(path: Path):
     text = path.read_text(encoding="utf-8")
-    lines = [i + 1 for i, line in enumerate(text.split("\n")) if "—" in line]
+    lines = [i + 1 for i, line in enumerate(text.split("\n")) if "\u2014" in line or "&mdash;" in line]
     assert not lines, f"{path.name} has an em dash on lines {lines}"
 
 

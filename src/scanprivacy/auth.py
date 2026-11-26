@@ -9,7 +9,7 @@ receiving them has no way to tell that the operator did not send them.
 That is why the rule here is mechanical rather than advisory. A key may be
 absent, but only while the service is bound to loopback, where the only callers
 are already on the machine. Binding anywhere else without a key is refused at
-startup — a warning would be read once and then not read again.
+startup: a warning would be read once and then not read again.
 
     SCANPRIVACY_API_KEY=<secret>   required on every /v1 route
     unset                    permitted on 127.0.0.1 / ::1 only

@@ -1,5 +1,5 @@
 # Italiano. Le chiavi assenti ricadono sull'inglese, quindi questo file può
-# restare parziale senza rompere nulla — ma un report misto si vede, e la
+# restare parziale senza rompere nulla: ma un report misto si vede, e la
 # suite di test verifica che sia completo.
 
 enum:
@@ -111,11 +111,11 @@ enum:
     visitor_id: identificatore del visitatore
 
 report:
-  kicker: scanprivacy — rapporto tecnico
-  title: Verifica privacy — {domain}
-  document_title: "Verifica privacy — {domain}"
+  kicker: scanprivacy (rapporto tecnico
+  title: Verifica privacy) {domain}
+  document_title: "Verifica privacy: {domain}"
   description: >
-    Verifica passiva di conformità privacy di {domain} — rilievi, evidenza
+    Verifica passiva di conformità privacy di {domain}: rilievi, evidenza
     integrale e riproducibilità.
   subtitle_observed: "Osservazione passiva della pagina pubblica · {timestamp} UTC"
   subtitle_url: "Pagina osservata"
@@ -174,7 +174,7 @@ report:
     control_mapping: Mappatura controlli
     evidence: Evidenza osservata
     verification: Come verificarlo in autonomia
-    remediation: "Correzione — impegno {effort}"
+    remediation: "Correzione: impegno {effort}"
     alternatives: Alternative
     page_title: Titolo pagina
     platform: Piattaforma riconosciuta
@@ -238,10 +238,10 @@ report:
     requests_entry_only: >
       La tabella seguente elenca le richieste della pagina di ingresso ({url}); le altre pagine sono conteggiate nella tabella qui sopra e dettagliate nel JSON allegato.
     pages: >
-      Le pagine sono scelte in modo deterministico — una per tipo, poi una pagina profonda, poi la navigazione principale — così due scansioni dello stesso sito restano confrontabili. I link si seguono solo dalla pagina di ingresso: una verifica di conformità non è un crawl.
+      Le pagine sono scelte in modo deterministico (una per tipo, poi una pagina profonda, poi la navigazione principale) così due scansioni dello stesso sito restano confrontabili. I link si seguono solo dalla pagina di ingresso: una verifica di conformità non è un crawl.
     severity_priority: >
       <strong>Gravità</strong>: quanto pesa il rilievo sul piano normativo.
-      <strong>Priorità</strong>: in quale ordine conviene affrontarlo — è la
+      <strong>Priorità</strong>: "in quale ordine conviene affrontarlo: è la"
       gravità corretta per l'impegno richiesto, così che un rilievo alto
       risolvibile in dieci minuti venga prima di uno che richiede una trattativa
       con un fornitore. P1 è il più urgente, P5 il meno.
@@ -274,7 +274,7 @@ report:
       identificano regole e knowledge base applicate: a parità di impronte e di
       obiettivo, l'analisi applicata è la stessa. L'impronta dell'evidenza lega
       il report all'osservazione allegata; non è stabile fra esecuzioni, perché
-      i siti cambiano — ed è esattamente ciò che consente di dimostrare che sono
+      i siti cambiano: ed è esattamente ciò che consente di dimostrare che sono
       cambiati.
     quick_wins: >
       <strong>{n} interventi a impegno basso su rilievi di gravità alta o
@@ -336,12 +336,12 @@ report:
         al più {n} pagine dello stesso sito, scelte in modo deterministico, un
         caricamento al secondo per host
     method: caricamento della sola pagina pubblica indicata, con browser headless
-    interaction: nessuna — nessun click, nessun invio di moduli, nessuna autenticazione
+    interaction: "nessuna: nessun click, nessun invio di moduli, nessuna autenticazione"
     consent: >
       nessuna scelta espressa: si osserva ciò che il sito fa a un visitatore che
       non ha ancora deciso
     extra_requests: solo i documenti legali collegati dalla pagina, uno per tipo
-    intrusive_tests: nessuno — nessun fuzzing, nessuna enumerazione, nessun accesso ad aree riservate
+    intrusive_tests: "nessuno: nessun fuzzing, nessuna enumerazione, nessun accesso ad aree riservate"
     robots: rispettato per ogni URL richiesto dal motore
     user_agent: "{ua}"
 
@@ -435,7 +435,7 @@ verification:
       contemporaneamente, quali cookie e chiavi di memoria sono già presenti
       prima di qualunque scelta.
     - >
-      In console: `typeof window.__tcfapi` — se restituisce `undefined`, non è
+      In console: `typeof window.__tcfapi`: se restituisce `undefined`, non è
       esposta l'API di consenso standard.
   ai:
     - "Aprire {url} e cercare un avviso visibile sulla natura automatica del componente."
@@ -534,9 +534,9 @@ verdict:
   conformant_note: Nessun rilievo di gravità critica o alta sulla pagina osservata.
   not_conformant_note: Presenti rilievi che richiedono intervento prima di considerare il sito conforme.
   inconclusive_note: "Il sito non è stato caricato: l'esito non è un esito favorevole."
-  inconclusive_blocking: osservazione non riuscita — nessun rilievo può essere escluso
+  inconclusive_blocking: "osservazione non riuscita: nessun rilievo può essere escluso"
   rule_error_note: "Alcune regole non hanno potuto essere valutate: l'esito non è un esito favorevole."
-  rule_error_blocking: "una regola non ha potuto essere valutata — i rilievi seguenti possono essere incompleti"
+  rule_error_blocking: "una regola non ha potuto essere valutata: i rilievi seguenti possono essere incompleti"
   robots_skip: il robots.txt del sito non consente allo user agent dichiarato di leggere questo URL
 
 cli:
@@ -567,13 +567,13 @@ remediation:
     La correzione dipende da quale terza parte ha generato il rilievo: ogni
     fornitore nella knowledge base indica il pattern che gli si applica.
   depends_on_vendor_step: >
-    Consultare il fornitore — `scanprivacy remediation <vendor-id>` — o uno dei pattern
+    Consultare il fornitore (`scanprivacy remediation <vendor-id>`) o uno dei pattern
     che può indicare: {patterns}.
   unknown_third_party: Terza parte non identificata
   transfer_basis:
-    dpf: EU–US Data Privacy Framework
+    dpf: EU-US Data Privacy Framework
     scc: Clausole contrattuali standard
-    dpf_scc: EU–US Data Privacy Framework / clausole contrattuali standard
+    dpf_scc: EU-US Data Privacy Framework / clausole contrattuali standard
     adequacy: decisione di adeguatezza
   pattern:
     self_host_asset:
@@ -772,7 +772,7 @@ art13:
   recipients: Destinatari o categorie di destinatari (art. 13.1.e)
   transfers: Trasferimenti verso paesi terzi (art. 13.1.f)
   retention: Periodo di conservazione (art. 13.2.a)
-  rights: Diritti dell'interessato (art. 13.2.b — artt. 15-22)
+  rights: "Diritti dell'interessato (art. 13.2.b: artt. 15-22)"
   complaint: Diritto di reclamo all'autorità di controllo (art. 13.2.d)
   profiling: Processo decisionale automatizzato e profilazione (art. 13.2.f)
   last_updated: Data di ultimo aggiornamento del documento
@@ -832,7 +832,7 @@ diff:
 page_choice:
   entry: la pagina indicata
   first_of_kind: "prima pagina di tipo {kind} trovata"
-  deep: pagina profonda — gli articoli portano incorporazioni che una landing non mostra
+  deep: "pagina profonda: gli articoli portano incorporazioni che una landing non mostra"
   navigation: navigazione principale
   robots_skip: "non visitata: esclusa da robots.txt"
   other_host: >
@@ -855,17 +855,17 @@ page_kind:
 consent_pass:
   verification:
     field_verified: >
-      verificato sul campo — questa esatta chiamata è stata eseguita contro
+      verificato sul campo: questa esatta chiamata è stata eseguita contro
       un'installazione reale della piattaforma e si è osservato che fa quanto il
       fornitore dichiara.
     documented: >
-      solo documentato — trascritto dalla documentazione del fornitore e mai
+      solo documentato: trascritto dalla documentazione del fornitore e mai
       eseguito contro un'installazione reale. La chiamata può esistere,
       terminare senza errori e non fare nulla: dall'esterno della pagina questo
       è indistinguibile da un sito che ha ignorato il rifiuto. I rilievi di
       questa passata sono espressi come indizi, non come fatti.
-  title: Passata di rifiuto — {domain}
-  document_title: "Passata di rifiuto — {domain}"
+  title: Passata di rifiuto ({domain}
+  document_title: "Passata di rifiuto) {domain}"
   description: >
     Che cosa fa {domain} dopo che il visitatore ha rifiutato il consenso,
     misurato attraverso la via di rifiuto documentata dal fornitore stesso della
@@ -979,7 +979,7 @@ dpia:
     osservato. Dove la knowledge base ha un equivalente, è indicato: la
     valutazione d'impatto meno costosa è il trasferimento che non si fa.
   met: Soddisfatti sulla superficie osservabile
-  not_assessable: Non valutabili dall'esterno — a cui deve rispondere il titolare
+  not_assessable: "Non valutabili dall'esterno: a cui deve rispondere il titolare"
   threshold: Due o più criteri soddisfatti richiedono di norma una valutazione.
   labels:
     criterion: Criterio
@@ -998,7 +998,7 @@ dpia:
     - >
       Il destinatario è soggetto a normative che consentono l'accesso delle
       autorità pubbliche oltre quanto il diritto dell'Unione ammetterebbe?
-    - Quali misure supplementari si applicano — cifratura, pseudonimizzazione, contrattuali e organizzative?
+    - "Quali misure supplementari si applicano: cifratura, pseudonimizzazione, contrattuali e organizzative?"
     - Il trasferimento è davvero necessario, o esiste un equivalente all'interno del SEE?
   criteria:
     evaluation_scoring: Valutazione o attribuzione di punteggio, inclusa la profilazione

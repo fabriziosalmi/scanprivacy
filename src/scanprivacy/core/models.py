@@ -1,6 +1,6 @@
 """The data model. Language-neutral by construction.
 
-A `ScanResult` contains facts, canonical values and catalogue keys — never a
+A `ScanResult` contains facts, canonical values and catalogue keys: never a
 sentence. Sentences are produced by `report.render` at the moment a report is
 asked for, in the language it is asked for. The practical consequence is the
 one that matters: one scan, any number of languages, no re-observation. A
@@ -42,7 +42,7 @@ class VerificationStep:
 class RemediationRef:
     """Where the fix text comes from, and what to substitute into it."""
 
-    source: str  # "rule" — written for this rule | "vendor" — a shared pattern
+    source: str  # "rule" (written for this rule | "vendor") a shared pattern
     key: str  # rule id, or vendor id
     effort: Effort = Effort.MEDIUM
     pattern: str | None = None  # vendor-sourced only
@@ -59,7 +59,7 @@ class Finding:
     confidence: Confidence
     subject_kind: SubjectKind
     subject_node: str
-    """Graph node the finding hangs from — the evidence, not the finding."""
+    """Graph node the finding hangs from: the evidence, not the finding."""
 
     params: dict[str, Any] = field(default_factory=dict)
     """Substituted into the rule's title and description at render time."""
@@ -76,7 +76,7 @@ class Finding:
     verification: tuple[VerificationStep, ...] = ()
     remediation: RemediationRef | None = None
 
-    # lifecycle — a scan is a photograph, remediation is a film
+    # lifecycle: a scan is a photograph, remediation is a film
     status: FindingStatus = FindingStatus.OPEN
     first_seen: str | None = None
     last_seen: str | None = None
@@ -104,7 +104,7 @@ def priority_for(severity: Severity, effort: Effort, confidence: Confidence) -> 
 
     Severity says how bad it is; priority says what to do on Monday. A high
     severity finding that takes ten minutes outranks one that needs a
-    procurement cycle — and is flagged as a quick win, which is the only thing
+    procurement cycle: and is flagged as a quick win, which is the only thing
     that reliably gets a first fix shipped.
     """
     score = _SEVERITY_WEIGHT.get(severity, 5) + _EFFORT_BONUS.get(effort, 0)
@@ -275,8 +275,8 @@ def finding_from_dict(data: dict[str, Any]) -> Finding:
 def scan_from_dict(data: dict[str, Any]) -> ScanResult:
     """Rebuild a result from its published JSON.
 
-    Needed because every downstream artefact — SARIF, badge, comparison,
-    a report in another language — must be derivable from the stored evidence
+    Needed because every downstream artefact: SARIF, badge, comparison,
+    a report in another language: must be derivable from the stored evidence
     alone. If a consumer had to re-scan to produce them, the digests would stop
     meaning anything.
     """

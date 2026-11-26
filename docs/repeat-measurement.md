@@ -1,6 +1,6 @@
 # Repeat mode, measured
 
-`scanprivacy scan --repeat N` loads a page N times and reports how many loads showed each finding (see [Repeating a scan](quickstart.html)). This page records what it showed on real sites, with the predictions that were written before the measurement.
+`scanprivacy scan --repeat N` loads a page N times and reports how many loads showed each finding (see [Repeating a scan](quickstart.md#repeating-a-scan)). This page records what it showed on real sites, with the predictions that were written before the measurement.
 
 ## Method
 

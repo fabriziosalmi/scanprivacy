@@ -6,7 +6,7 @@
 # file changing.
 #
 # WARNING, carried into every report: these mappings say a finding is pertinent
-# to a control. They do not attest conformity to the scheme — closing a finding
+# to a control. They do not attest conformity to the scheme: closing a finding
 # contributes to a control, it does not satisfy it.
 #
 # Fields per rule

@@ -11,7 +11,7 @@ Two kinds of digest live here, and the distinction matters:
   plus same target means the same analysis was applied. They make two scans
   comparable, and they are what a client can pin in a contract.
 - **the evidence digest** identifies *this observation*. Sites change between
-  visits — that is the point of observing them — so it does not repeat across
+  visits (that is the point of observing them) so it does not repeat across
   runs. It proves that report and attached JSON describe the same capture, and
   that nothing was edited afterwards.
 
@@ -113,7 +113,7 @@ def build_record(
         "engine": engine_identity(browser_version),
         # Where the measurement was made from. A site answers differently to
         # different observers, so two honest scans can disagree for a reason
-        # that is not about the site — and a record with no field for it makes
+        # that is not about the site: and a record with no field for it makes
         # that disagreement look like a change, or like an error.
         "vantage": observation_point(),
         "digests": {
@@ -146,7 +146,7 @@ def build_record(
 
 
 def verify_record(scan_json: dict[str, Any]) -> dict[str, Any]:
-    """Recompute the digests of a published result — `scanprivacy verify`."""
+    """Recompute the digests of a published result: `scanprivacy verify`."""
     record = scan_json.get("record") or {}
     declared = (record.get("evidence_digest") or {}).get("sha256")
     recomputed = canonical_digest(scan_json.get("observation", {}))

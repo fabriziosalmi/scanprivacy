@@ -46,7 +46,7 @@ class Confidence(StrEnum):
     """Whether the engine states a fact or an indication.
 
     CERTAIN is reserved for what was directly observed. Anything inferred from
-    text matching is PROBABLE — the difference is what keeps the report honest
+    text matching is PROBABLE: the difference is what keeps the report honest
     when a supplier pushes back.
     """
 
@@ -73,7 +73,7 @@ class Priority(StrEnum):
 
 
 class Owner(StrEnum):
-    """Who holds the lever to close the finding — not who is legally liable."""
+    """Who holds the lever to close the finding: not who is legally liable."""
 
     DPO = "dpo"
     CTO = "cto"

@@ -1,4 +1,4 @@
-# English — source language. Every other locale falls back to this file key by
+# English: source language. Every other locale falls back to this file key by
 # key, so this one must stay complete. Placeholders are `{name}` and are
 # substituted at render time; an unknown placeholder is left visible.
 
@@ -111,11 +111,11 @@ enum:
     visitor_id: visitor identifier
 
 report:
-  kicker: scanprivacy — technical report
-  title: Privacy assessment — {domain}
-  document_title: "Privacy assessment — {domain}"
+  kicker: scanprivacy (technical report
+  title: Privacy assessment) {domain}
+  document_title: "Privacy assessment: {domain}"
   description: >
-    Passive privacy conformance assessment of {domain} — findings, full evidence
+    Passive privacy conformance assessment of {domain}: findings, full evidence
     and reproducibility record.
   subtitle_observed: "Passive observation of the public page · {timestamp} UTC"
   subtitle_url: "Page observed"
@@ -174,7 +174,7 @@ report:
     control_mapping: Control mapping
     evidence: Evidence observed
     verification: How to check this yourself
-    remediation: "Remediation — {effort} effort"
+    remediation: "Remediation: {effort} effort"
     alternatives: Alternatives
     page_title: Page title
     platform: Platform detected
@@ -238,10 +238,10 @@ report:
     requests_entry_only: >
       The table below lists the requests of the entry page ({url}); the other pages are counted in the table above and detailed in the attached JSON.
     pages: >
-      Pages are chosen deterministically — one per kind, then a leaf page, then the main navigation — so two scans of the same site remain comparable. Links are followed from the entry page only: a conformance check is not a crawl.
+      Pages are chosen deterministically (one per kind, then a leaf page, then the main navigation) so two scans of the same site remain comparable. Links are followed from the entry page only: a conformance check is not a crawl.
     severity_priority: >
       <strong>Severity</strong> is how much the finding weighs in legal terms.
-      <strong>Priority</strong> is the order in which to deal with it — severity
+      <strong>Priority</strong> is the order in which to deal with it: severity
       corrected for the effort required, so that a high finding fixable in ten
       minutes comes before one that needs a supplier negotiation. P1 is the most
       urgent, P5 the least.
@@ -274,7 +274,7 @@ report:
       digests identify the rules and knowledge base that were applied: same
       digests and same target means the same analysis was applied. The evidence
       digest ties the report to the observation attached to it; it is not stable
-      across runs, because sites change — which is exactly what makes it possible
+      across runs, because sites change: which is exactly what makes it possible
       to prove that they did.
     quick_wins: >
       <strong>{n} low-effort fixes on high or critical findings.</strong> These
@@ -336,12 +336,12 @@ report:
         at most {n} pages of the same site, chosen deterministically, one page
         load per second per host
     method: only the public page indicated is loaded, with a headless browser
-    interaction: none — no clicks, no form submissions, no authentication
+    interaction: "none: no clicks, no form submissions, no authentication"
     consent: >
       no choice is expressed: what the site does to a visitor who has not yet
       decided is what gets observed
     extra_requests: only the legal documents linked from the page, one per kind
-    intrusive_tests: none — no fuzzing, no enumeration, no access to restricted areas
+    intrusive_tests: "none: no fuzzing, no enumeration, no access to restricted areas"
     robots: honoured for every URL the engine requests
     user_agent: "{ua}"
 
@@ -430,7 +430,7 @@ verification:
       Load {url}: observe whether a choice mechanism appears and, at the same
       time, which cookies and storage keys are already present before any choice.
     - >
-      In the console: `typeof window.__tcfapi` — if it returns `undefined`, the
+      In the console: `typeof window.__tcfapi`: if it returns `undefined`, the
       standard consent API is not exposed.
   ai:
     - "Open {url} and look for a visible notice about the automated nature of the component."
@@ -528,9 +528,9 @@ verdict:
   conformant_note: No finding of critical or high severity on the page observed.
   not_conformant_note: There are findings that require action before the site can be considered conformant.
   inconclusive_note: "The site was not loaded: this outcome is not a favourable one."
-  inconclusive_blocking: observation failed — no finding can be ruled out
+  inconclusive_blocking: "observation failed: no finding can be ruled out"
   rule_error_note: "Some rules could not be evaluated, so this outcome is not a favourable one."
-  rule_error_blocking: "a rule could not be evaluated — the findings below may be incomplete"
+  rule_error_blocking: "a rule could not be evaluated: the findings below may be incomplete"
   robots_skip: the site's robots.txt does not allow the declared user agent to read this URL
 
 cli:
@@ -560,13 +560,13 @@ remediation:
     The fix depends on which third party triggered this finding: each vendor in
     the knowledge base names the pattern that applies to it.
   depends_on_vendor_step: >
-    Look up the vendor — `scanprivacy remediation <vendor-id>` — or one of the patterns
+    Look up the vendor (`scanprivacy remediation <vendor-id>`) or one of the patterns
     it may name: {patterns}.
   unknown_third_party: Unidentified third party
   transfer_basis:
-    dpf: EU–US Data Privacy Framework
+    dpf: EU-US Data Privacy Framework
     scc: Standard Contractual Clauses
-    dpf_scc: EU–US Data Privacy Framework / Standard Contractual Clauses
+    dpf_scc: EU-US Data Privacy Framework / Standard Contractual Clauses
     adequacy: adequacy decision
   pattern:
     self_host_asset:
@@ -588,7 +588,7 @@ remediation:
           Establish whether {product} still serves an active purpose; if it does
           not, removing it closes the finding permanently.
         - >
-          If it stays, make the script conditional on consent — the request must
+          If it stays, make the script conditional on consent: the request must
           not leave the browser before the user chooses.
         - Declare {vendor} among the recipients in the privacy notice, with purpose and transfer.
     click_to_load:
@@ -629,7 +629,7 @@ remediation:
   extra:
     badges_are_fetched_per_view: >
       A badge is fetched on every page view, not once: a README with ten of them
-      discloses the visitor to the badge service ten times. The image is static —
+      discloses the visitor to the badge service ten times. The image is static:
       caching it at build time removes the transfer without changing the page.
     idp_receives_identity: >
       An identity provider receives who the user is, not merely that a visitor arrived: state the categories of identity attributes it receives, and for how long authentication events are kept.
@@ -711,7 +711,7 @@ constraint:
   response_headers_fixed:
     github-pages: >
       GitHub Pages serves a fixed set of response headers and provides no way to
-      add one — no configuration file, no dashboard setting, no header rules.
+      add one: no configuration file, no dashboard setting, no header rules.
       The finding is true and the exposure is real; it simply cannot be closed
       while the site is served from this platform.
 
@@ -762,7 +762,7 @@ art13:
   recipients: Recipients or categories of recipients (Art. 13(1)(e))
   transfers: Transfers to third countries (Art. 13(1)(f))
   retention: Retention period (Art. 13(2)(a))
-  rights: Rights of the data subject (Art. 13(2)(b) — Arts. 15-22)
+  rights: "Rights of the data subject (Art. 13(2)(b): Arts. 15-22)"
   complaint: Right to lodge a complaint with the supervisory authority (Art. 13(2)(d))
   profiling: Automated decision-making and profiling (Art. 13(2)(f))
   last_updated: Date the document was last updated
@@ -820,12 +820,12 @@ diff:
 page_choice:
   entry: the page that was submitted
   first_of_kind: "first {kind} page found"
-  deep: a deep page — articles carry embeds a landing page never shows
+  deep: "a deep page: articles carry embeds a landing page never shows"
   navigation: main navigation
   robots_skip: "not visited: disallowed by robots.txt"
   other_host: >
     not visited: same organisation, different site. A separate deployment
-    needs a separate scan — findings from it, reported here, would name the
+    needs a separate scan: findings from it, reported here, would name the
     wrong host and send you to the wrong codebase.
 
 page_kind:
@@ -842,16 +842,16 @@ page_kind:
 consent_pass:
   verification:
     field_verified: >
-      field-verified — this exact call has been exercised against a real
+      field-verified: this exact call has been exercised against a real
       installation of the platform and observed to do what the vendor describes.
     documented: >
-      documented only — transcribed from the vendor's documentation and never
+      documented only: transcribed from the vendor's documentation and never
       run against a live installation. The call may exist, return cleanly and
       do nothing, which from outside the page is indistinguishable from a site
       that ignored the refusal. Findings from this pass are stated as
       indications rather than as facts.
-  title: Refusal pass — {domain}
-  document_title: "Refusal pass — {domain}"
+  title: Refusal pass ({domain}
+  document_title: "Refusal pass) {domain}"
   description: >
     What {domain} does after the visitor refuses consent, measured through the
     refusal path the consent platform's own vendor documents.
@@ -961,7 +961,7 @@ dpia:
     knowledge base holds an equivalent, it is listed: the cheapest transfer
     impact assessment is the transfer you do not make.
   met: Met on the observable surface
-  not_assessable: Not assessable from outside — to be answered by the controller
+  not_assessable: "Not assessable from outside: to be answered by the controller"
   threshold: Two or more criteria met usually calls for an assessment.
   labels:
     criterion: Criterion
@@ -980,7 +980,7 @@ dpia:
     - >
       Is the recipient subject to legislation permitting public authority access
       beyond what EU law would allow?
-    - What supplementary measures apply — encryption, pseudonymisation, contractual and organisational?
+    - "What supplementary measures apply: encryption, pseudonymisation, contractual and organisational?"
     - Is the transfer necessary at all, or is an equivalent available inside the EEA?
   criteria:
     evaluation_scoring: Evaluation or scoring, including profiling

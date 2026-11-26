@@ -54,7 +54,7 @@ CMP_MARKERS: dict[str, re.Pattern[str]] = {
     "termly": re.compile(r"termly", re.I),
     "axeptio": re.compile(r"axeptio", re.I),
     # Widely deployed self-hosted banners. Missing one of these does not
-    # understate a site — it overstates it: the engine would report "no
+    # understate a site: it overstates it: the engine would report "no
     # mechanism to collect consent" about a site that has a banner, which is
     # both wrong and the kind of error a supplier rightly throws back.
     "cookiealert": re.compile(r"mod_cookiealert|cookiecuttr", re.I),
@@ -82,7 +82,7 @@ class BrowserUnavailable(RuntimeError):
     """Chromium is not installed, or could not start.
 
     Installing the package installs the Playwright library, not the browser it
-    drives. Those are separate steps, and nothing in `pip install` says so — so
+    drives. Those are separate steps, and nothing in `pip install` says so: so
     the first command a new user runs fails, and without this it fails as a
     twenty-line traceback ending in someone else's error class. The remedy is
     one line; the message has to be one line too.
@@ -137,11 +137,11 @@ class Request:
     A site is answerable for choosing to embed YouTube. It is not answerable for
     the fonts YouTube then loads inside its own player, which it cannot see,
     configure or prevent. Attributing those to the site produces findings whose
-    owner has no way to act on them — and, on the site that exposed this, said
+    owner has no way to act on them: and, on the site that exposed this, said
     the operator had chosen Google Fonts when its own CSP said `font-src
     'self'`."""
     frame_url: str | None = None
-    """URL of the outermost embedded document in the chain — the frame the page
+    """URL of the outermost embedded document in the chain: the frame the page
     itself put there. `None` when the page issued the request directly."""
 
 
@@ -197,7 +197,7 @@ class Observation:
     generator_meta: str | None = None
     meta_csp: str | None = None
     """`<meta http-equiv="Content-Security-Policy">`. On hosting that does not
-    let anyone set response headers — GitHub Pages, most static hosts — this is
+    let anyone set response headers (GitHub Pages, most static hosts) this is
     the only lever there is. Reading only the header would report a site as
     unprotected while its actual protection sits two lines above."""
     meta_referrer: str | None = None
@@ -214,7 +214,7 @@ class Observation:
     cmp_detected: list[str] = field(default_factory=list)
     tcf_api_present: bool | None = None
     """True, False, or *not established*. Three states rather than two, because
-    a probe that threw used to be recorded as `False` — an error turned into
+    a probe that threw used to be recorded as `False`: an error turned into
     evidence that the site has no consent framework."""
     ai_markers: list[str] = field(default_factory=list)
     html_len: int = 0
@@ -339,7 +339,7 @@ async def observe_in_context(context, url: str, settings: Settings = DEFAULTS) -
         site made, and the one the site made is the outermost.
 
         Failure here degrades to "the page issued it", which is the attribution
-        the engine already had — never to a silent drop of the request.
+        the engine already had: never to a silent drop of the request.
         """
         try:
             frame = request.frame
@@ -414,12 +414,12 @@ async def observe_in_context(context, url: str, settings: Settings = DEFAULTS) -
                 depth,
                 frame_url,
             )
-        except Exception as exc:  # pragma: no cover — losing one entry beats losing the visit
+        except Exception as exc:  # pragma: no cover: losing one entry beats losing the visit
             listener_failures.append(f"response_listener: {type(exc).__name__}")
 
     def on_request_failed(req: Any) -> None:
         # A blocked or failed request still proves the page *tried* to contact
-        # the host — legally that is an attempted transfer, and it belongs in
+        # the host: legally that is an attempted transfer, and it belongs in
         # the evidence.
         try:
             depth, frame_url = _frame_origin(req)
@@ -463,7 +463,7 @@ async def observe_in_context(context, url: str, settings: Settings = DEFAULTS) -
         # Every `<meta>` we care about, read in one DOM pass rather than through
         # CSS selectors. An attribute selector with the wrong case-insensitivity
         # syntax throws, and a caught throw is indistinguishable from "the page
-        # has no policy" — the engine would report an absence it never observed.
+        # has no policy": the engine would report an absence it never observed.
         #
         # `generator` used to be read separately with `eval_on_selector`, which
         # raises when nothing matches. Most pages carry no generator meta, so

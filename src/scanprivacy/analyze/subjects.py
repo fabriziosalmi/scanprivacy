@@ -3,7 +3,7 @@
 `per: vendor` is what lets one generic rule replace privacy-pa's one-rule-per-
 tracker table. A subject carries three things: the graph node it belongs to,
 the parameters its rule's text will be formatted with, and the evidence that
-proves it. All three are language-neutral — parameters that are canonical
+proves it. All three are language-neutral: parameters that are canonical
 values stay canonical values and are translated at render time.
 """
 
@@ -19,7 +19,7 @@ from .context import Context
 def key(catalogue_key: str) -> dict[str, str]:
     """Mark a parameter as a catalogue key rather than a literal.
 
-    Used where the value itself is a phrase — "Unidentified third party" — that
+    Used where the value itself is a phrase ("Unidentified third party") that
     has to be translated before it is substituted into a sentence.
     """
     return {"__key__": catalogue_key}
